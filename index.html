@@ -396,15 +396,54 @@
             Die in Tabellen angegebenen Strombelastbarkeiten gelten ausschließlich unter genormten Standardbedingungen. 
             Im Veranstaltungsbetrieb weichen die realen Verlegebedingungen hiervon häufig ab, sodass Korrekturfaktoren berücksichtigt
             werden müssen.
-            Tabellenwerte gelten nur unter Standardbedingungen. Im Eventbetrieb müssen häufig Korrekturen berücksichtigt werden,
-            zum Beispiel Leitungsbündel (Häufung), höhere Umgebungstemperaturen oder aufgewickelte Leitungen.
+          </p>
+          <p>
+            Ziel ist es, die <strong>zulässige Strombelastbarkeit der Leitung \(I_Z\)</strong>
+            unter realen Bedingungen zu bestimmen. Diese ergibt sich aus dem tabellierten
+             Wert \(I_{Z,tab}\) und den jeweiligen Umrechnungsfaktoren.
           </p>
           <div class="formula">
-            $$ I_Z = I_{Z,tab}\cdot k_T \cdot k_H \cdot k_A $$
+            $$ I_Z = I_{Z,tab} \cdot f_1 \cdot f_2 \cdot f_3 \cdot f_4 $$
           </div>
           <p class="muted">
             Je ungünstiger die Bedingungen, desto geringer wird \(I_Z\). Wenn \(I_N\) nicht mehr kleiner/gleich \(I_Z\) ist, muss der Querschnitt erhöht werden.
           </p>
+          <p>
+              Für die Dimensionierung muss gelten:
+            </p>
+          
+            <div class="formula">
+              $$ I_N \le I_Z $$
+            </div>
+          
+            <p>
+              Um die Mindestanforderung an den tabellierten Stromwert zu bestimmen,
+              wird die Formel nach \(I_{Z,tab}\) umgestellt und der Nennstrom der
+              Sicherung \(I_N\) eingesetzt:
+            </p>
+          
+            <div class="formula">
+              $$ I_{Z,tab} = \frac{I_N}{f_1 \cdot f_2 \cdot f_3 \cdot f_4} $$
+            </div>
+          
+            <p>
+              Für die weiteren Berechnungen werden folgende, für alle Stromkreise
+              geltende Annahmen getroffen:
+            </p>
+          
+            <ul class="list">
+              <li>Umgebungstemperatur: 35&nbsp;°C → \(f_1 = 0{,}91\)</li>
+              <li>Einadrige Leitungen → \(f_2 = 1{,}0\)</li>
+              <li>Leitungen frei liegend, nicht aufgewickelt → \(f_3 = 1{,}0\)</li>
+              <li>Einlagige Verlegung, keine Häufung → \(f_4 = 1{,}0\)</li>
+            </ul>
+          
+            <p class="muted">
+              Sinkt \(I_Z\) durch ungünstige Verlegebedingungen unter den Nennstrom der
+              Sicherung, ist der Leiterquerschnitt zu erhöhen und die Dimensionierung
+              erneut zu überprüfen.
+            </p>
+          </section>
         </div>
       </section>
 
@@ -444,6 +483,7 @@
   </div>
 </body>
 </html>
+
 
 
 
