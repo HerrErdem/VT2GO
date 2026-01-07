@@ -389,45 +389,62 @@
           <img src="images/verteilung.png" alt="Unterverteilung in der Veranstaltungstechnik">
           <div class="caption">Unterverteilung: RCD, LS, Einspeisung und Abgänge (Beispieldarstellung)</div>
         </div>
-
+      
         <div>
           <h2>Verlegebedingungen und Korrekturfaktoren</h2>
+      
           <p>
-            Die in Tabellen angegebenen Strombelastbarkeiten gelten ausschließlich unter genormten Standardbedingungen. 
-            Im Veranstaltungsbetrieb weichen die realen Verlegebedingungen hiervon häufig ab, sodass Korrekturfaktoren berücksichtigt
-            werden müssen.
+            Die in Tabellen angegebenen Strombelastbarkeiten gelten ausschließlich unter genormten Standardbedingungen.
+            Im Veranstaltungsbetrieb weichen die realen Verlegebedingungen hiervon häufig ab, sodass Korrekturfaktoren
+            berücksichtigt werden müssen.
           </p>
+      
           <p>
-            Ziel ist es, die <strong>zulässige Strombelastbarkeit der Leitung \(I_Z\)</strong>
-            unter realen Bedingungen zu bestimmen. Diese ergibt sich aus dem tabellierten
-             Wert \(I_{Z,tab}\) und den jeweiligen Umrechnungsfaktoren.
+            Ziel ist es, die <strong>zulässige Strombelastbarkeit der Leitung \(I_Z\)</strong> unter realen Bedingungen zu bestimmen.
+            Diese ergibt sich aus dem tabellierten Wert \(I_{Z,tab}\) und den jeweiligen Umrechnungsfaktoren:
           </p>
+      
           <div class="formula">
-            $$ I_Z = I_{Z,tab} \cdot f_1 \cdot f_2 \cdot f_3 \cdot f_4 $$
+            $$ I_Z = I_{Z,tab}\cdot f_1 \cdot f_2 \cdot f_3 \cdot f_4 $$
           </div>
-          <p class="muted">
-            Je ungünstiger die Bedingungen, desto geringer wird \(I_Z\). Wenn \(I_N\) nicht mehr kleiner/gleich \(I_Z\) ist, muss der Querschnitt erhöht werden.
-          </p>
+      
           <p>
-            Im einem beispielhaften Anwendungsfall liegen folgende Verlegebedingungen vor:
-            Die Umgebungstemperatur beträgt 35 °C, es werden einadrige Leitungen eingesetzt, die frei liegend verlegt sind, nicht aufgewickelt werden und keiner Häufung unterliegen.
-            Die zugehörigen Korrekturfaktoren werden den einschlägigen Tabellenwerken entnommen und für die weitere Dimensionierung verwendet. Hier die Beispielwerte:
+            Damit die Absicherung die Leitung nicht überlastet, muss gelten:
           </p>
-            <ul class="list">
-              <li>Umgebungstemperatur: 35&nbsp;°C → \(f_1 = 0{,}91\)</li>
-              <li>Einadrige Leitungen → \(f_2 = 1{,}0\)</li>
-              <li>Leitungen frei liegend, nicht aufgewickelt → \(f_3 = 1{,}0\)</li>
-              <li>Einlagige Verlegung, keine Häufung → \(f_4 = 1{,}0\)</li>
-            </ul>
-          
-            <p class="muted">
-              Sinkt \(I_Z\) durch ungünstige Verlegebedingungen unter den Nennstrom der
-              Sicherung, ist der Leiterquerschnitt zu erhöhen und die Dimensionierung
-              erneut zu überprüfen.
-            </p>
-          </section>
+      
+          <div class="formula">
+            $$ I_N \le I_Z $$
+          </div>
+      
+          <p>
+            Zur Bestimmung der Mindestanforderung an den Tabellenwert wird nach \(I_{Z,tab}\) umgestellt
+            und der Nennstrom der Sicherung \(I_N\) eingesetzt:
+          </p>
+      
+          <div class="formula">
+            $$ I_{Z,tab} = \frac{I_N}{f_1 \cdot f_2 \cdot f_3 \cdot f_4} $$
+          </div>
+      
+          <p>
+            Im beispielhaften Anwendungsfall liegen folgende Verlegebedingungen vor:
+            Umgebungstemperatur 35&nbsp;°C, einadrige Leitung, frei liegend verlegt, nicht aufgewickelt und ohne Häufung.
+            Die zugehörigen Korrekturfaktoren werden den einschlägigen Tabellenwerken entnommen. Beispielwerte:
+          </p>
+      
+          <ul class="list">
+            <li>Umgebungstemperatur: 35&nbsp;°C → \(f_1 = 0{,}91\)</li>
+            <li>Einadrige Leitungen → \(f_2 = 1{,}0\)</li>
+            <li>Frei liegend, nicht aufgewickelt → \(f_3 = 1{,}0\)</li>
+            <li>Einlagige Verlegung, keine Häufung → \(f_4 = 1{,}0\)</li>
+          </ul>
+      
+          <p class="muted">
+            Sinkt \(I_Z\) unter den Nennstrom der Sicherung \(I_N\), ist der Leiterquerschnitt zu erhöhen
+            und die Dimensionierung erneut zu überprüfen.
+          </p>
         </div>
       </section>
+
 
       <section id="spannungsfall">
         <h2>Spannungsfall</h2>
@@ -465,6 +482,7 @@
   </div>
 </body>
 </html>
+
 
 
 
