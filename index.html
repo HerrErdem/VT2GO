@@ -432,28 +432,148 @@
 
       </section>
 
-      <section id="spannungsfall">
-        <h2>Spannungsfall</h2>
+                  <!-- NEUER BLOCK: Wechselstrom (einphasig) -->
+      <section id="wechselstrom">
+        <h2>Wechselstrom (einphasig)</h2>
+      
         <p>
-          Ein zu großer Spannungsfall kann zu Leistungseinbußen und Instabilität führen. Als Planungsgrenze wird häufig mit 3&nbsp;% gerechnet:
+          Die bisherigen Formeln beziehen sich auf Drehstromsysteme.
+          Für den Fall, dass es sich bei der Leitungsdimensionierung um Wechselstrom handelt,
+          also um einen einphasigen 230-V-Stromkreis, gelten andere Zusammenhänge.
         </p>
-
-        <div class="formula">
-          $$ \Delta U_{max} = 0{,}03 \cdot U $$
-        </div>
-
+      
         <p>
-          Für Drehstromleitungen kann vereinfacht gerechnet werden:
+          Bei einphasigem Wechselstrom wird der Verbraucher über einen Außenleiter L versorgt.
+          Der Strom fließt über den Neutralleiter N zurück zur Quelle.
+          Damit entsteht der Stromkreis aus Hin- und Rückleiter.
         </p>
-
+      
+        <h3>Scheinleistung und Betriebsstrom bei Wechselstrom</h3>
+      
+        <p>
+          Die elektrische Belastung der Leitung wird durch die Scheinleistung beschrieben.
+          Für einphasigen Wechselstrom gilt:
+        </p>
+      
         <div class="formula">
-          $$ \Delta U = \sqrt{3}\cdot I_B \cdot l \cdot R' \cdot \cos\varphi $$
+          $$ S = U \cdot I $$
         </div>
-
+      
+        <p>
+          Wird die Wirkleistung und der Leistungsfaktor berücksichtigt, ergibt sich der
+          Betriebsstrom zu:
+        </p>
+      
+        <div class="formula">
+          $$ I_B = \frac{P}{U \cdot \cos\varphi} $$
+        </div>
+      
         <p class="muted">
-          Wenn \(\Delta U > \Delta U_{max}\), muss der Querschnitt erhöht und der Spannungsfall erneut geprüft werden.
+          Dabei ist \(P\) die Wirkleistung des Verbrauchers, \(U\) die Nennspannung (230&nbsp;V)
+          und \(\cos\varphi\) der Leistungsfaktor.
         </p>
+      
       </section>
+
+
+            <!-- SPANNUNGSFALL -->
+      <section id="spannungsfall">
+        <h2>Spannungsfall \(\Delta U\)</h2>
+      
+        <p>
+          Beim Betrieb fließt Strom durch die Leitung. Da jeder Leiter einen elektrischen Widerstand besitzt,
+          fällt entlang der Leitung Spannung ab. Dieser Spannungsabfall heißt Spannungsfall \(\Delta U\).
+          Er ist keine Kurzschluss-Schutzbedingung, sondern eine Funktionsanforderung: Am Verbraucher muss
+          ausreichend Spannung ankommen, damit Licht-, Ton- und Steuerungstechnik stabil arbeitet.
+        </p>
+      
+        <div class="callout">
+          <p class="muted" style="margin:0;">
+            <strong>Planungsgrenze:</strong> In vielen Anwendungen wird der zulässige Spannungsfall im Endstromkreis mit
+            \(\Delta u \le 3\%\) angesetzt (je nach Anwendung auch strenger).
+            Wichtig: \(\Delta u\) ist in Prozent, \(\Delta U\) in Volt.
+          </p>
+        </div>
+      
+        <h3>Endstromkreis – welcher Leitungsabschnitt wird betrachtet?</h3>
+        <p class="muted">
+          Praktisch wird der Spannungsfall häufig für Endstromkreise bewertet:
+          Leitungsstrecken <strong>hinter der letzten Überstrom-Schutzeinrichtung</strong> (z.&nbsp;B. LS-Schalter)
+          bis zum Anschlusspunkt am Verbraucher. Der Abschnitt zwischen Messeinrichtung (Zähler) und Beginn des Endstromkreises
+          wird in vielen Planungsaufgaben vernachlässigt.
+        </p>
+      
+        <h3>Zusammenhang \(\Delta U\) (Volt) und \(\Delta u\) (Prozent)</h3>
+        <div class="formula">
+          $$ \Delta u=\frac{\Delta U}{U_N}\cdot 100\% \qquad\Longleftrightarrow\qquad \Delta U=\frac{\Delta u}{100\%}\cdot U_N $$
+        </div>
+      
+        <p>
+          Beispiel: Bei \(U_N=230\,\mathrm{V}\) ergibt \(\Delta u=3\%\) den maximal zulässigen Spannungsfall
+          \(\Delta U_{max}=0{,}03\cdot 230\,\mathrm{V}=6{,}9\,\mathrm{V}\).
+        </p>
+      
+        <h3>Formeln für den Spannungsfall</h3>
+        <p class="muted">
+          Für die Berechnung ist zuerst zu klären, ob es sich um Gleichstrom, einphasigen Wechselstrom (1~) oder Drehstrom (3~) handelt.
+          Je nach System unterscheidet sich der Faktor in der Formel.
+        </p>
+      
+        <div class="two-cards">
+          <div>
+            <h3>Wechselstrom (1~)</h3>
+            <div class="formula">
+              $$ \Delta U=\frac{2\cdot l\cdot I\cdot \cos\varphi}{\gamma\cdot A} $$
+            </div>
+            <p class="muted">
+              Der Faktor \(2\) berücksichtigt Hin- und Rückleiter (Außenleiter und Neutralleiter).
+            </p>
+          </div>
+      
+          <div>
+            <h3>Gleichstrom (⎓)</h3>
+            <div class="formula">
+              $$ \Delta U=\frac{2\cdot l\cdot I}{\gamma\cdot A} $$
+            </div>
+            <p class="muted">
+              Ohne \(\cos\varphi\), da bei Gleichstrom keine Phasenverschiebung vorliegt.
+            </p>
+          </div>
+        </div>
+      
+        <div style="margin-top:14px;">
+          <h3>Drehstrom (3~)</h3>
+          <div class="formula">
+            $$ \Delta U=\frac{\sqrt{3}\cdot l\cdot I\cdot \cos\varphi}{\gamma\cdot A} $$
+          </div>
+          <p class="muted">
+            Der Faktor \(\sqrt{3}\) ist der Verkettungsfaktor im Drehstromsystem. Anders als bei 1~ wird nicht „Hin- und Rückleiter“
+            verdoppelt, sondern die vektorielle Beziehung der Phasen berücksichtigt.
+          </p>
+        </div>
+      
+        <h3>Bedeutung der Größen</h3>
+        <ul class="list">
+          <li>\(\Delta U\): Spannungsfall in \(\mathrm{V}\)</li>
+          <li>\(l\): einfache Leitungslänge in \(\mathrm{m}\) (nicht Hin- und Rückweg; das steckt im Faktor \(2\))</li>
+          <li>\(I\): Strom in \(\mathrm{A}\) (typisch Betriebsstrom \(I_B\) des Stromkreises)</li>
+          <li>\(\cos\varphi\): Wirkfaktor (Phasenverschiebung bei AC-Verbrauchern)</li>
+          <li>\(\gamma\): spezifischer elektrischer Leitwert des Leitermaterials in \(\dfrac{m}{\Omega\cdot mm^2}\) (Kupfer häufig \(\gamma\approx 56\))</li>
+          <li>\(A\): Leiterquerschnitt in \(\mathrm{mm}^2\)</li>
+        </ul>
+      
+        <h3>Bewertung</h3>
+        <p>
+          Nach der Berechnung wird \(\Delta U\) mit \(\Delta U_{max}\) verglichen oder in Prozent umgerechnet.
+          Gilt \(\Delta u \le 3\%\) (bzw. der geforderte Grenzwert), ist der Spannungsfall zulässig.
+          Ist der Spannungsfall zu groß, muss in der Regel der Leiterquerschnitt erhöht oder die Leitungslänge reduziert werden.
+        </p>
+      
+        <div class="formula">
+          $$ \Delta U \le \Delta U_{max} \qquad\text{bzw.}\qquad \Delta u \le 3\% $$
+        </div>
+      </section>
+
 
 
             <!-- NEUER BLOCK: Wechselstrom (einphasig) -->
@@ -536,6 +656,7 @@
   </div>
 </body>
 </html>
+
 
 
 
