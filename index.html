@@ -379,7 +379,9 @@
             $$ I_B \le I_N \le I_Z $$
           </div>
           <p class="muted">
-            \(I_N\) ist der Nennstrom der Sicherung. Dieser wird auch Bemessungsstrom genannt und sind genormte Größen, die in Tabellen entnommen werden können. Typische Werte sind 6 A, 10 A, bis zu 63 A. \(I_Z\) ist die zulässige Strombelastbarkeit der Leitung unter den realen Bedingungen. In der Praxis gibt es verschiedene Faktoren, die den Strom begrenzen.
+            \(I_N\) ist der Nennstrom der Sicherung und wird durch die vorhandene Steckvorrichtung bzw. den Abgang der Verteilung begrenzt (z. B. CEE 16 A). 
+            Dieser wird auch Bemessungsstrom genannt und sind genormte Größen, die in Tabellen entnommen werden können. Typische Werte sind 6 A, 10 A, bis zu 63 A. 
+            \(I_Z\) ist die zulässige Strombelastbarkeit der Leitung unter den realen Bedingungen. In der Praxis gibt es verschiedene Faktoren, die den Strom begrenzen.
           </p>
         </div>
       </section>
@@ -411,7 +413,7 @@
 
           <p>
             Im beispielhaften Anwendungsfall liegen folgende Verlegebedingungen vor:
-            Umgebungstemperatur 35&nbsp;°C, einadrige Leitung, frei liegend verlegt, nicht aufgewickelt und ohne Häufung.
+            Umgebungstemperatur 35&nbsp;°C, mehradrige Leitung mit zwei stromführenden Adern (L und N), frei liegend verlegt, nicht aufgewickelt und ohne Häufung.
             Die zugehörigen Korrekturfaktoren werden den einschlägigen Tabellenwerken entnommen. Beispielwerte:
           </p>
 
@@ -437,7 +439,7 @@
         </p>
 
         <div class="formula">
-          $$ \Delta U_{max} = 0{,}03\% \cdot U $$
+          $$ \Delta U_{max} = 0{,}03 \cdot U $$
         </div>
 
         <p>
@@ -452,6 +454,75 @@
           Wenn \(\Delta U > \Delta U_{max}\), muss der Querschnitt erhöht und der Spannungsfall erneut geprüft werden.
         </p>
       </section>
+
+
+      <!-- NEUER BLOCK: Einphasig / „zweiphasig“ (2 stromführende Leiter) -->
+      <section id="zweiphasig">
+        <h2>Einphasig, „zweiphasig“ – zwei stromführende Leiter (L und N)</h2>
+      
+        <p>
+          In der Praxis wird bei einphasigen 230-V-Stromkreisen manchmal umgangssprachlich von „2-phasig“ gesprochen.
+          Gemeint ist dabei nicht echter Zweiphasenwechselstrom, sondern:
+          Ein Verbraucher wird über den Außenleiter <strong>L</strong> versorgt und der Strom fließt über den
+          Neutralleiter <strong>N</strong> zurück. Damit sind <strong>zwei Leiter gleichzeitig stromführend</strong>.
+          Der Schutzleiter <strong>PE</strong> zählt nicht als stromführender Leiter, da er nur im Fehlerfall Strom führt.
+        </p>
+      
+        <div class="callout">
+          <p class="muted" style="margin:0;">
+            <strong>Merksatz:</strong> Einphasig bedeutet „eine Phase“ – aber es fließen Ströme über
+            <strong>zwei Leiter</strong> (L und N).
+          </p>
+        </div>
+      
+        <div class="two-cards" style="margin-top:14px;">
+          <div>
+            <h2 style="margin-top:0;">Was bedeutet das für die Strombelastbarkeit?</h2>
+            <p>
+              Für die Strombelastbarkeit ist die Anzahl der <strong>stromführenden Leiter</strong> entscheidend.
+              Bei einem einphasigen Stromkreis sind das <strong>L und N</strong> (also 2 stromführende Adern).
+              Viele Abminderungsfaktoren in Tabellen greifen erst bei deutlich mehr stromführenden Adern
+              (z. B. ab 5).
+            </p>
+            <ul class="list">
+              <li>Einphasig: stromführend sind <strong>L und N</strong></li>
+              <li><strong>PE</strong> zählt nicht als stromführend</li>
+              <li>Abminderung für „vieladrig“ meist erst ab mehreren stromführenden Adern</li>
+            </ul>
+          </div>
+      
+          <div>
+            <h2 style="margin-top:0;">Was bedeutet das für den Spannungsfall?</h2>
+            <p>
+              Der Spannungsfall entsteht auf dem gesamten Stromweg: Hinleiter (L) und Rückleiter (N).
+              Deshalb wird bei der einphasigen Spannungsfallberechnung mit der <strong>doppelten Leitungslänge</strong>
+              gerechnet (<strong>2 · l</strong>).
+            </p>
+      
+            <div class="formula">
+              $$ \Delta U = 2 \cdot l \cdot I_B \cdot R' \cdot \cos\varphi $$
+            </div>
+      
+            <p class="muted" style="margin-top:10px;">
+              Hinweis: Für Drehstromleitungen wird häufig mit dem Faktor \(\sqrt{3}\) gerechnet.
+              Bei einphasigen 230-V-Leitungen gilt stattdessen die Schleifenlänge \(2\cdot l\).
+            </p>
+          </div>
+        </div>
+      
+        <div class="kpi" style="margin-top:14px;">
+          <div class="box">
+            <p class="title">Einphasig (230 V)</p>
+            <p class="value">2 stromführende Leiter: L und N, kein \(\sqrt{3}\)</p>
+          </div>
+          <div class="box">
+            <p class="title">Drehstrom (400 V)</p>
+            <p class="value">\(\sqrt{3}\)-Faktor (symmetrische Last), Strom pro Außenleiter</p>
+          </div>
+        </div>
+      </section>
+
+      
 
       <section>
         <h2>Fazit</h2>
@@ -470,6 +541,7 @@
   </div>
 </body>
 </html>
+
 
 
 
