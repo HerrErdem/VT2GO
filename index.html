@@ -456,71 +456,66 @@
       </section>
 
 
-      <!-- NEUER BLOCK: Einphasig / „zweiphasig“ (2 stromführende Leiter) -->
-      <section id="zweiphasig">
-        <h2>Einphasig, „zweiphasig“ – zwei stromführende Leiter (L und N)</h2>
+            <!-- NEUER BLOCK: Wechselstrom (einphasig) -->
+      <section id="wechselstrom">
+        <h2>Wechselstrom (einphasig)</h2>
       
         <p>
-          In der Praxis wird bei einphasigen 230-V-Stromkreisen manchmal umgangssprachlich von „2-phasig“ gesprochen.
-          Gemeint ist dabei nicht echter Zweiphasenwechselstrom, sondern:
-          Ein Verbraucher wird über den Außenleiter <strong>L</strong> versorgt und der Strom fließt über den
-          Neutralleiter <strong>N</strong> zurück. Damit sind <strong>zwei Leiter gleichzeitig stromführend</strong>.
-          Der Schutzleiter <strong>PE</strong> zählt nicht als stromführender Leiter, da er nur im Fehlerfall Strom führt.
+          Die bisherigen Formeln beziehen sich auf Drehstromsysteme.
+          Für den Fall, dass es sich bei der Leitungsdimensionierung um Wechselstrom handelt,
+          also um einen einphasigen 230-V-Stromkreis, gelten andere Zusammenhänge.
         </p>
       
-        <div class="callout">
-          <p class="muted" style="margin:0;">
-            <strong>Merksatz:</strong> Einphasig bedeutet „eine Phase“ – aber es fließen Ströme über
-            <strong>zwei Leiter</strong> (L und N).
-          </p>
+        <p>
+          Bei einphasigem Wechselstrom wird der Verbraucher über einen Außenleiter L versorgt.
+          Der Strom fließt über den Neutralleiter N zurück zur Quelle.
+          Damit entsteht der Stromkreis aus Hin- und Rückleiter.
+        </p>
+      
+        <h3>Scheinleistung und Betriebsstrom bei Wechselstrom</h3>
+      
+        <p>
+          Die elektrische Belastung der Leitung wird durch die Scheinleistung beschrieben.
+          Für einphasigen Wechselstrom gilt:
+        </p>
+      
+        <div class="formula">
+          $$ S = U \cdot I $$
         </div>
       
-        <div class="two-cards" style="margin-top:14px;">
-          <div>
-            <h2 style="margin-top:0;">Was bedeutet das für die Strombelastbarkeit?</h2>
-            <p>
-              Für die Strombelastbarkeit ist die Anzahl der <strong>stromführenden Leiter</strong> entscheidend.
-              Bei einem einphasigen Stromkreis sind das <strong>L und N</strong> (also 2 stromführende Adern).
-              Viele Abminderungsfaktoren in Tabellen greifen erst bei deutlich mehr stromführenden Adern
-              (z. B. ab 5).
-            </p>
-            <ul class="list">
-              <li>Einphasig: stromführend sind <strong>L und N</strong></li>
-              <li><strong>PE</strong> zählt nicht als stromführend</li>
-              <li>Abminderung für „vieladrig“ meist erst ab mehreren stromführenden Adern</li>
-            </ul>
-          </div>
+        <p>
+          Wird die Wirkleistung und der Leistungsfaktor berücksichtigt, ergibt sich der
+          Betriebsstrom zu:
+        </p>
       
-          <div>
-            <h2 style="margin-top:0;">Was bedeutet das für den Spannungsfall?</h2>
-            <p>
-              Der Spannungsfall entsteht auf dem gesamten Stromweg: Hinleiter (L) und Rückleiter (N).
-              Deshalb wird bei der einphasigen Spannungsfallberechnung mit der <strong>doppelten Leitungslänge</strong>
-              gerechnet (<strong>2 · l</strong>).
-            </p>
-      
-            <div class="formula">
-              $$ \Delta U = 2 \cdot l \cdot I_B \cdot R' \cdot \cos\varphi $$
-            </div>
-      
-            <p class="muted" style="margin-top:10px;">
-              Hinweis: Für Drehstromleitungen wird häufig mit dem Faktor \(\sqrt{3}\) gerechnet.
-              Bei einphasigen 230-V-Leitungen gilt stattdessen die Schleifenlänge \(2\cdot l\).
-            </p>
-          </div>
+        <div class="formula">
+          $$ I_B = \frac{P}{U \cdot \cos\varphi} $$
         </div>
       
-        <div class="kpi" style="margin-top:14px;">
-          <div class="box">
-            <p class="title">Einphasig (230 V)</p>
-            <p class="value">2 stromführende Leiter: L und N, kein \(\sqrt{3}\)</p>
-          </div>
-          <div class="box">
-            <p class="title">Drehstrom (400 V)</p>
-            <p class="value">\(\sqrt{3}\)-Faktor (symmetrische Last), Strom pro Außenleiter</p>
-          </div>
+        <p class="muted">
+          Dabei ist \(P\) die Wirkleistung des Verbrauchers, \(U\) die Nennspannung (230&nbsp;V)
+          und \(\cos\varphi\) der Leistungsfaktor.
+        </p>
+      
+        <h3>Spannungsfall bei Wechselstrom</h3>
+      
+        <p>
+          Der Spannungsfall entsteht bei einphasigem Wechselstrom auf dem gesamten Stromweg,
+          bestehend aus Außenleiter und Neutralleiter.
+          Für die Berechnung ist daher die doppelte Leitungslänge zu berücksichtigen.
+          Ein \(\sqrt{3}\)-Faktor tritt hier nicht auf.
+        </p>
+      
+        <div class="formula">
+          $$ \Delta U = 2 \cdot l \cdot I_B \cdot R' \cdot \cos\varphi $$
         </div>
+      
+        <p class="muted">
+          Der Faktor 2 berücksichtigt den Spannungsfall auf Hin- und Rückleiter.
+          Der Schutzleiter PE wird nicht in die Berechnung einbezogen.
+        </p>
       </section>
+
 
       
 
@@ -541,6 +536,7 @@
   </div>
 </body>
 </html>
+
 
 
 
