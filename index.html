@@ -338,97 +338,126 @@
         </div>
       </section>
 
-      <section>
-        <h2>Welche Leistung fließt über die Leitung?</h2>
+      <!-- NEUER BLOCK: Stromarten gemeinsam + Formeln + Nennstromregel (geordnet) -->
+      <section id="stromarten-nennstromregel" class="stack">
+        <h2>Nennstromregel, Scheinleistung und Betriebsstrom</h2>
+      
+        <!-- 1) Einstieg: Nennstromregel (kurz, Überblick) -->
         <p>
-          Für die Dimensionierung zählt immer die Leistung, die über die jeweilige Leitung transportiert wird.
-          Versorgt eine Leitung eine Unterverteilung, dann fließt über diese Leitung die gesamte Scheinleistung der angeschlossenen Verbraucher.
+          Grundlage jeder Leitungsdimensionierung ist die <strong>Nennstromregel</strong>. Sie stellt sicher, dass
+          Verbraucher, Absicherung und Leitung zueinander passen. Dabei werden drei Ströme betrachtet:
+          <span class="muted">Betriebsstrom \(I_B\)</span>, <span class="muted">Nennstrom \(I_N\)</span> und
+          <span class="muted">zulässige Strombelastbarkeit \(I_Z\)</span>.
+          Auf dieser Seite werden die Schritte anschließend <strong>systematisch</strong> erklärt.
         </p>
+      
         <div class="formula">
-          $$ S_{ges} = \sum S_i $$
+          $$ I_B \le I_N \le I_Z $$
         </div>
+      
         <p class="muted">
-          Hinweis: Bei symmetrischer Drehstrombelastung verteilt sich die Gesamtleistung auf drei Außenleiter.
-          Für den Leiterquerschnitt zählt der Strom pro Außenleiter.
-        </p>
-      </section>
-
-      <section id="betriebsstrom" class="two-cards">
-        <div>
-          <h2>Betriebsstrom bestimmen</h2>
-          <p>
-            Der Betriebsstrom \(I_B\) beschreibt die Stromaufnahme im Normalbetrieb. Die grundlegende Frage, die man sich dabei stellen muss, ist, wie viel Strom muss fließen, damit die Geräte einwandfrei funktionieren? Für Drehstrom gilt:
-          </p>
-          <div class="formula">
-            $$ I_B = \frac{S_{ges}}{\sqrt{3}\cdot U} $$
-          </div>
-          <p class="muted">
-            Alternative über die Phasenleistung:
-          </p>
-          <div class="formula">
-            $$ S_{Phase}=\frac{S_{ges}}{3}\qquad I_B=\frac{S_{Phase}}{U_{Phase}} $$
-          </div>
-        </div>
-
-        <div id="nennstromregel">
-          <h2>Nennstromregel</h2>
-          <p>
-            Leitung, Absicherung und Strombelastbarkeit müssen zusammenpassen:
-          </p>
-          <div class="formula">
-            $$ I_B \le I_N \le I_Z $$
-          </div>
-          <p class="muted">
-            \(I_N\) ist der Nennstrom der Sicherung und wird durch die vorhandene Steckvorrichtung bzw. den Abgang der Verteilung begrenzt (z. B. CEE 16 A). 
-            Dieser wird auch Bemessungsstrom genannt und sind genormte Größen, die in Tabellen entnommen werden können. Typische Werte sind 6 A, 10 A, bis zu 63 A. 
-            \(I_Z\) ist die zulässige Strombelastbarkeit der Leitung unter den realen Bedingungen. In der Praxis gibt es verschiedene Faktoren, die den Strom begrenzen.
-          </p>
-        </div>
-      </section>
-
-
-                        <!-- NEUER BLOCK: Wechselstrom (einphasig) -->
-      <section id="wechselstrom">
-        <h2>Wechselstrom (einphasig)</h2>
-      
-        <p>
-          Vor der Erläuterung der Faktoren ist zu beachten, dass sich die Berechnung bei Wechselstrom in einigen Punkten von der bei Drehstrom unterscheidet. 
-          Die bisherigen Formeln beziehen sich auf Drehstromsysteme.
-          Für den Fall, dass es sich bei der Leitungsdimensionierung um Wechselstrom handelt,
-          also um einen einphasigen 230-V-Stromkreis, gelten andere Zusammenhänge.
+          \(I_B\): Strom im Normalbetrieb &nbsp;–&nbsp;
+          \(I_N\): genormter Bemessungsstrom der Sicherung/Steckvorrichtung &nbsp;–&nbsp;
+          \(I_Z\): maximal zulässiger Dauerstrom der Leitung unter realen Bedingungen.
         </p>
       
-        <p>
-          Bei einphasigem Wechselstrom wird der Verbraucher über einen Außenleiter L versorgt.
-          Der Strom fließt über den Neutralleiter N zurück zur Quelle.
-          Damit entsteht der Stromkreis aus Hin- und Rückleiter.
-        </p>
+        <hr class="divider" />
       
-        <h3>Scheinleistung und Betriebsstrom bei Wechselstrom</h3>
-      
+        <!-- 2) Scheinleistung / Gesamtleistung -->
+        <h3>Welche Leistung fließt über die Leitung?</h3>
         <p>
-          Die elektrische Belastung der Leitung wird durch die Scheinleistung beschrieben.
-          Für einphasigen Wechselstrom gilt:
+          Für die Dimensionierung zählt die Leistung, die über die jeweilige Leitung transportiert wird.
+          Versorgt eine Leitung mehrere Verbraucher oder eine Unterverteilung, ergibt sich die
+          <strong>Gesamtscheinleistung</strong> aus der Summe aller Einzelscheinleistungen.
         </p>
       
         <div class="formula">
-          $$ S = U \cdot I $$
-        </div>
-      
-        <p>
-          Wird die Wirkleistung und der Leistungsfaktor berücksichtigt, ergibt sich der
-          Betriebsstrom zu:
-        </p>
-      
-        <div class="formula">
-          $$ I_B = \frac{P}{U \cdot \cos\varphi} $$
+          $$ S_{\text{ges}} = \sum S_i $$
         </div>
       
         <p class="muted">
-          Dabei ist \(P\) die Wirkleistung des Verbrauchers, \(U\) die Nennspannung (230&nbsp;V)
-          und \(\cos\varphi\) der Leistungsfaktor.
+          Hinweis: Bei symmetrischer Drehstrombelastung verteilt sich die Gesamtleistung auf drei Außenleiter.
+          Für den Leiterquerschnitt zählt der Strom <em>pro Außenleiter</em>.
         </p>
       
+        <hr class="divider" />
+      
+        <!-- 3) Betriebsstrom: zweispaltig -->
+        <h3>Betriebsstrom bestimmen</h3>
+        <p>
+          Der Betriebsstrom \(I_B\) beschreibt die Stromaufnahme im Normalbetrieb.
+          Er ergibt sich aus der übertragenen Leistung und hängt von der Stromart ab.
+        </p>
+      
+        <div class="two-cards" id="betriebsstrom-formeln">
+          <!-- links: Gleichstrom + Wechselstrom -->
+          <div>
+            <h4>Gleichstrom &amp; Wechselstrom (einphasig)</h4>
+      
+            <p class="muted">
+              Gleichstrom (DC): konstante Spannung und Strom. Wechselstrom (1~): Strom fließt über Hin- und Rückleiter,
+              bei Wirkleistung \(P\) ist der Leistungsfaktor \(\cos\varphi\) zu berücksichtigen.
+            </p>
+      
+            <p><strong>Gleichstrom (DC)</strong></p>
+            <div class="formula">
+              $$ I_B = \frac{P}{U} $$
+            </div>
+      
+            <p><strong>Wechselstrom (1~)</strong></p>
+            <div class="formula">
+              $$ S = U \cdot I $$
+            </div>
+      
+            <div class="formula">
+              $$ I_B = \frac{P}{U \cdot \cos\varphi} $$
+            </div>
+      
+            <p class="muted">
+              \(U\) typischerweise 230&nbsp;V bei einphasigem Wechselstrom.
+            </p>
+          </div>
+      
+          <!-- rechts: Drehstrom -->
+          <div>
+            <h4>Drehstrom (dreiphasig)</h4>
+      
+            <p class="muted">
+              Bei Drehstrom verteilt sich die Gesamtleistung auf drei Außenleiter. Für die Leitungsauslegung ist der
+              Strom pro Außenleiter entscheidend.
+            </p>
+      
+            <div class="formula">
+              $$ I_B = \frac{S_{\text{ges}}}{\sqrt{3}\cdot U} $$
+            </div>
+      
+            <p class="muted">Alternative über die Phasenleistung:</p>
+            <div class="formula">
+              $$ S_{\text{Phase}}=\frac{S_{\text{ges}}}{3}\qquad I_B=\frac{S_{\text{Phase}}}{U_{\text{Phase}}} $$
+            </div>
+          </div>
+        </div>
+      
+        <hr class="divider" />
+      
+        <!-- 4) Nennstromregel: genauer -->
+        <h3>Nennstromregel genauer erklärt</h3>
+        <p>
+          Nachdem \(I_B\) bestimmt wurde, wird die Nennstromregel angewendet.
+          Der Betriebsstrom darf den Nennstrom der Sicherung nicht überschreiten, sonst würde das Schutzorgan im Normalbetrieb
+          auslösen. Gleichzeitig darf der Nennstrom nicht größer sein als die zulässige Strombelastbarkeit der Leitung,
+          da die Leitung sonst thermisch überlastet werden kann.
+        </p>
+      
+        <div class="formula">
+          $$ I_B \le I_N \le I_Z $$
+        </div>
+      
+        <p class="muted">
+          \(I_N\) ist eine genormte Größe (z.&nbsp;B. 6&nbsp;A, 10&nbsp;A, 16&nbsp;A, 32&nbsp;A, 63&nbsp;A) und wird häufig durch
+          Steckvorrichtungen/Abgänge begrenzt (z.&nbsp;B. CEE&nbsp;16&nbsp;A). \(I_Z\) ist der zulässige Dauerstrom der Leitung
+          unter den realen Bedingungen (Verlegeart, Umgebungstemperatur, Häufung usw.).
+        </p>
       </section>
 
 
@@ -597,6 +626,7 @@
   </div>
 </body>
 </html>
+
 
 
 
