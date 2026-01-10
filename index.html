@@ -315,8 +315,8 @@
           <ul class="list">
             <li>Last erfassen: Scheinleistung \(S\), Spannung \(U\), Leistungsfaktor \(\cos\varphi\)</li>
             <li>Betriebsstrom \(I_B\) bestimmen</li>
-            <li>Absicherung prüfen (Nennstromregel)</li>
-            <li>Verlegebedingungen berücksichtigen (Korrekturfaktoren)</li>
+            <li>Bemessungsstrom \(I_N\), Absicherung prüfen</li>
+            <li>Zulässige Strombelastbarkeit \(I_Z\), Verlegebedingungen berücksichtigen</li>
             <li>Spannungsfall \(\Delta U\) prüfen</li>
           </ul>
 
@@ -346,7 +346,7 @@
         <p>
           Grundlage jeder Leitungsdimensionierung ist die <strong>Nennstromregel</strong>. Sie stellt sicher, dass
           Verbraucher, Absicherung und Leitung zueinander passen. Dabei werden drei Ströme betrachtet:
-          <span class="muted">Betriebsstrom \(I_B\)</span>, <span class="muted">Nennstrom \(I_N\)</span> und
+          <span class="muted">Betriebsstrom \(I_B\)</span>, <span class="muted">Bemessungsstrom \(I_N\)</span> und
           <span class="muted">zulässige Strombelastbarkeit \(I_Z\)</span>.
           Auf dieser Seite werden die Schritte anschließend <strong>systematisch</strong> erklärt.
         </p>
@@ -361,7 +361,7 @@
           \(I_Z\): maximal zulässiger Dauerstrom der Leitung unter realen Bedingungen.
         </p>
       
-        <hr class="divider" />
+
       
         <!-- 2) Scheinleistung / Gesamtleistung -->
         <h3>Welche Leistung fließt über die Leitung?</h3>
@@ -380,7 +380,7 @@
           Für den Leiterquerschnitt zählt der Strom <em>pro Außenleiter</em>.
         </p>
       
-        <hr class="divider" />
+   
       
         <!-- 3) Betriebsstrom: zweispaltig -->
         <h3>Betriebsstrom bestimmen</h3>
@@ -438,27 +438,57 @@
           </div>
         </div>
       
-        <hr class="divider" />
+        <!-- 4) Bemessungsstrom IN – Auswahl des Schutzorgans -->
+        <section id="bemessungsstrom">
+          <h3>Bemessungsstrom \(I_N\) – Auswahl des Schutzorgans</h3>
+        
+          <p>
+            Nachdem der Betriebsstrom \(I_B\) bestimmt wurde, wird im nächsten Schritt der
+            <strong>Bemessungsstrom \(I_N\)</strong> festgelegt.
+            Der Bemessungsstrom ist der Nennwert des Schutzorgans, also zum Beispiel eines
+            Leitungsschutzschalters, einer Sicherung oder einer Steckvorrichtung.
+            Er gibt an, für welchen Strom das Schutzorgan ausgelegt ist, ohne im Normalbetrieb auszulösen.
+          </p>
+        
+          <p>
+            Der Bemessungsstrom ist <strong>keine frei berechenbare Größe</strong>, sondern eine
+            <strong>genormte Stromstufe</strong>, die aus Tabellen ausgewählt wird.
+            Übliche Bemessungsstromstärken sind:
+          </p>
+        
+          <div class="formula">
+            $$ I_N \in \{6,\;10,\;13,\;16,\;20,\;25,\;32,\;40,\;50,\;63\}\,\text{A} $$
+          </div>
+        
+          <p>
+            Die Auswahl erfolgt nach dem Grundprinzip, dass der Bemessungsstrom mindestens so groß
+            sein muss wie der zuvor berechnete Betriebsstrom:
+          </p>
+        
+          <div class="formula">
+            $$ I_N \ge I_B $$
+          </div>
+        
+          <p class="muted">
+            Da nur genormte Stromstufen zur Verfügung stehen, wird in der Praxis stets der
+            <strong>nächstgrößere passende Bemessungsstrom</strong> gewählt.
+          </p>
+        
+          <p>
+            Häufig wird der Bemessungsstrom zusätzlich durch die
+            <strong>Steckvorrichtung oder den Abgang der Verteilung</strong> begrenzt.
+            Eine CEE-16-Steckdose erlaubt beispielsweise maximal einen Bemessungsstrom von 16&nbsp;A,
+            unabhängig davon, welcher Wert rechnerisch möglich wäre.
+          </p>
+        
+          <p class="muted">
+            Erst im nächsten Schritt wird überprüft, ob die ausgewählte Leitung diesen
+            Bemessungsstrom unter realen Bedingungen dauerhaft führen darf.
+            Diese Überprüfung erfolgt über die zulässige Strombelastbarkeit \(I_Z\).
+          </p>
+        </section>
+
       
-        <!-- 4) Nennstromregel: genauer -->
-        <h3>Nennstromregel genauer erklärt</h3>
-        <p>
-          Nachdem \(I_B\) bestimmt wurde, wird die Nennstromregel angewendet.
-          Der Betriebsstrom darf den Nennstrom der Sicherung nicht überschreiten, sonst würde das Schutzorgan im Normalbetrieb
-          auslösen. Gleichzeitig darf der Nennstrom nicht größer sein als die zulässige Strombelastbarkeit der Leitung,
-          da die Leitung sonst thermisch überlastet werden kann.
-        </p>
-      
-        <div class="formula">
-          $$ I_B \le I_N \le I_Z $$
-        </div>
-      
-        <p class="muted">
-          \(I_N\) ist eine genormte Größe (z.&nbsp;B. 6&nbsp;A, 10&nbsp;A, 16&nbsp;A, 32&nbsp;A, 63&nbsp;A) und wird häufig durch
-          Steckvorrichtungen/Abgänge begrenzt (z.&nbsp;B. CEE&nbsp;16&nbsp;A). \(I_Z\) ist der zulässige Dauerstrom der Leitung
-          unter den realen Bedingungen (Verlegeart, Umgebungstemperatur, Häufung usw.).
-        </p>
-      </section>
 
 
       <section id="verlegebedingungen" class="grid-2">
@@ -626,6 +656,7 @@
   </div>
 </body>
 </html>
+
 
 
 
