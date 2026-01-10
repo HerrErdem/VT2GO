@@ -488,65 +488,91 @@
           </p>
         </section>
    
-
-      <section id="verlegebedingungen" class="grid-2">
-      
-        <div class="hero">
-          <img src="images/kabelbildgut.png"
-               alt="Unterverteilung in der Veranstaltungstechnik">
-
-          <div class="caption">
-            Unterverteilung: RCD, LS, Einspeisung und Abgänge (Beispieldarstellung)
+        <section id="verlegebedingungen" class="grid-2">
+        
+          <!-- links: Bild -->
+          <div class="hero">
+            <img src="images/kabelbildgut.png"
+                 alt="Unterverteilung in der Veranstaltungstechnik">
+        
+            <div class="caption">
+              Unterverteilung: RCD, LS, Einspeisung und Abgänge (Beispieldarstellung)
+            </div>
           </div>
-        </div>
-
-        <div>
-
-          <h2>Zulässige Strombelastbarkeit \(I_Z\)</h2>
-            <p class="subtitle">
-              Einfluss von Verlegebedingungen und Korrekturfaktoren
+        
+          <!-- rechts: Überschrift + Einleitung + Formel -->
+          <div>
+            <h2>Zulässige Strombelastbarkeit \(I_Z\): Einfluss von Verlegebedingungen und Korrekturfaktoren</h2>
+       
+            <p>
+              Nachdem der Bemessungsstrom \(I_N\) des Schutzorgans festgelegt wurde, muss überprüft werden,
+              ob die ausgewählte Leitung diesen Strom unter den tatsächlichen Einsatzbedingungen
+              dauerhaft führen darf. Maßgeblich ist dabei die <strong>zulässige Strombelastbarkeit \(I_Z\)</strong> der Leitung.
             </p>
-
-
-          <p>
-            Nachdem der Bemessungsstrom \(I_N\) des Schutzorgans festgelegt wurde, muss überprüft werden,
-            ob die ausgewählte Leitung diesen Strom unter den tatsächlichen Einsatzbedingungen
-            dauerhaft führen darf.
-            Maßgeblich ist dabei die <strong>zulässige Strombelastbarkeit \(I_Z\)</strong> der Leitung.
-          </p>
-
+        
+            <p>
+              Die in Tabellen angegebenen Strombelastbarkeiten gelten jedoch nur unter genormten Referenzbedingungen.
+              Im Veranstaltungsbetrieb weichen die realen Verlegebedingungen häufig davon ab, sodass die tabellierten Werte
+              mithilfe von <strong>Korrekturfaktoren</strong> angepasst werden müssen.
+            </p>
+        
+            <div class="formula">
+              $$ I_Z = I_{r}\cdot f_1 \cdot f_2 \cdot f_3 \cdot f_4 $$
+            </div>
+          </div>
+        
+          <!-- neu: Vollbreite unter dem Grid -->
+          <!-- Beispiel: alternative Verlegebedingungen (mit anderen Zahlen) -->
+          <div class="grid-full" id="verlegebeispiel-2">
+            <h3>Beispielhafter Anwendungsfall (alternative Verlegebedingungen)</h3>
           
-          <p>
-            Die in Tabellen angegebenen Strombelastbarkeiten gelten jedoch nur unter
-            genormten Referenzbedingungen.
-            Im Veranstaltungsbetrieb weichen die realen Verlegebedingungen häufig davon ab,
-            sodass die tabellierten Werte mithilfe von <strong>Korrekturfaktoren</strong> angepasst werden müssen.
-          </p>
-
-          <div class="formula">
-            $$ I_Z = I_{r}\cdot f_1 \cdot f_2 \cdot f_3 \cdot f_4 $$
+            <p>
+              Im folgenden Anwendungsfall liegen bewusst <strong>ungünstigere Verlegebedingungen</strong> vor, wie sie im
+              Veranstaltungsbetrieb häufig auftreten können. Die Leitung wird auf einer Kabeltrommel betrieben, mehrere Leitungen
+              liegen nebeneinander und die Umgebungstemperatur ist erhöht.
+            </p>
+          
+            <p><strong>Gegeben sind folgende Verlegebedingungen:</strong></p>
+            <ul class="list">
+              <li>Umgebungstemperatur: <strong>40&nbsp;°C</strong></li>
+              <li>Mehradrige flexible Leitung mit <strong>drei stromführenden Adern</strong> (L1, L2, L3)</li>
+              <li>Leitung <strong>teilweise aufgewickelt</strong> auf einer Kabeltrommel</li>
+              <li><strong>Häufung</strong> mit mehreren parallel verlegten Leitungen auf dem Boden</li>
+            </ul>
+          
+            <p>
+              Die zugehörigen Korrekturfaktoren werden den einschlägigen Tabellenwerken entnommen. Beispielwerte:
+            </p>
+          
+            <ul class="list">
+              <li>Umgebungstemperatur: 40&nbsp;°C → \(f_1 = 0{,}87\)</li>
+              <li>Mehradrige Leitung, 3 stromführende Adern → \(f_2 = 0{,}85\)</li>
+              <li>Teilweise aufgewickelt (2 Lagen auf Trommel) → \(f_3 = 0{,}61\)</li>
+              <li>Häufung mit 4 parallel verlegten Leitungen → \(f_4 = 0{,}65\)</li>
+            </ul>
+          
+            <p>
+              Damit ergibt sich für die zulässige Strombelastbarkeit:
+            </p>
+          
+            <div class="formula">
+              $$ I_Z = I_r \cdot 0{,}87 \cdot 0{,}85 \cdot 0{,}61 \cdot 0{,}65 $$
+            </div>
+          
+            <p class="muted">
+              Der tabellierte Referenzwert \(I_r\) wird durch die realen Verlegebedingungen deutlich reduziert.
+              Gerade bei aufgewickelten Leitungen und Häufung kann die zulässige Strombelastbarkeit auf deutlich unter
+              die Hälfte des Tabellenwertes sinken.
+            </p>
+          
+            <p class="muted">
+              Sinkt die berechnete zulässige Strombelastbarkeit \(I_Z\) unter den Bemessungsstrom des Schutzorgans \(I_N\),
+              ist der Leiterquerschnitt zu erhöhen oder die Verlegeart anzupassen. Erst wenn \(I_Z \ge I_N\) gilt,
+              ist die Dimensionierung zulässig.
+            </p>
           </div>
 
-          <p>
-            Im beispielhaften Anwendungsfall liegen folgende Verlegebedingungen vor:
-            Umgebungstemperatur 35&nbsp;°C, mehradrige Leitung mit zwei stromführenden Adern (L und N), frei liegend verlegt, nicht aufgewickelt und ohne Häufung.
-            Die zugehörigen Korrekturfaktoren werden den einschlägigen Tabellenwerken entnommen. Beispielwerte:
-          </p>
 
-          <ul class="list">
-            <li>Umgebungstemperatur: 35&nbsp;°C → \(f_1 = 0{,}91\)</li>
-            <li>Einadrige Leitungen → \(f_2 = 1{,}0\)</li>
-            <li>Frei liegend, nicht aufgewickelt → \(f_3 = 1{,}0\)</li>
-            <li>Einlagige Verlegung, keine Häufung → \(f_4 = 1{,}0\)</li>
-          </ul>
-
-          <p class="muted">
-            Sinkt \(I_Z\) unter den Nennstrom der Sicherung \(I_N\), ist der Leiterquerschnitt zu erhöhen
-            und die Dimensionierung erneut zu überprüfen.
-          </p>
-        </div>
-
-      </section>
 
 
 
@@ -667,6 +693,7 @@
   </div>
 </body>
 </html>
+
 
 
 
