@@ -147,6 +147,13 @@
       gap:14px;
       grid-template-columns: 1.15fr .85fr;
     }
+
+        /* sorgt dafür, dass bestimmte Inhalte die volle Breite
+       innerhalb eines grid-2-Abschnitts einnehmen */
+    .grid-2 > .grid-full{
+      grid-column: 1 / -1;
+    }
+    
     @media (max-width: 860px){
       .grid-2{ grid-template-columns: 1fr; }
     }
@@ -695,6 +702,7 @@
   </div>
 </body>
 </html>
+
 
 
 
