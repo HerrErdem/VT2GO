@@ -632,7 +632,7 @@
           <div>
             <h3>Wechselstrom (1~)</h3>
             <div class="formula">
-              $$ \Delta U=\frac{2\cdot l\cdot I\cdot \cos\varphi}{\gamma\cdot A} $$
+              $$ \Delta U=\frac{2\cdot l\cdot I\cdot \cos\varphi}{\kappa\cdot A} $$
             </div>
             <p class="muted">
               Der Faktor \(2\) berücksichtigt Hin- und Rückleiter (Außenleiter und Neutralleiter).
@@ -642,7 +642,7 @@
           <div>
             <h3>Gleichstrom (⎓)</h3>
             <div class="formula">
-              $$ \Delta U=\frac{2\cdot l\cdot I}{\gamma\cdot A} $$
+              $$ \Delta U=\frac{2\cdot l\cdot I}{\kappa\cdot A} $$
             </div>
             <p class="muted">
               Ohne \(\cos\varphi\), da bei Gleichstrom keine Phasenverschiebung vorliegt.
@@ -653,7 +653,7 @@
         <div style="margin-top:14px;">
           <h3>Drehstrom (3~)</h3>
           <div class="formula">
-            $$ \Delta U=\frac{\sqrt{3}\cdot l\cdot I\cdot \cos\varphi}{\gamma\cdot A} $$
+            $$ \Delta U=\frac{\sqrt{3}\cdot l\cdot I\cdot \cos\varphi}{\kappa\cdot A} $$
           </div>
           <p class="muted">
             Der Faktor \(\sqrt{3}\) ist der Verkettungsfaktor im Drehstromsystem. Anders als bei 1~ wird nicht „Hin- und Rückleiter“
@@ -667,7 +667,7 @@
           <li>\(l\): einfache Leitungslänge in \(\mathrm{m}\) (nicht Hin- und Rückweg; das steckt im Faktor \(2\))</li>
           <li>\(I\): Strom in \(\mathrm{A}\) (typisch Betriebsstrom \(I_B\) des Stromkreises)</li>
           <li>\(\cos\varphi\): Wirkfaktor (Phasenverschiebung bei AC-Verbrauchern)</li>
-          <li>\(\gamma\): spezifischer elektrischer Leitwert des Leitermaterials in \(\dfrac{m}{\Omega\cdot mm^2}\) (Kupfer häufig \(\gamma\approx 56\))</li>
+          <li>\(\kappa\): spezifischer elektrischer Leitwert des Leitermaterials in \(\dfrac{m}{\Omega\cdot mm^2}\) (Kupfer häufig \(\kappa\approx 56\))</li>
           <li>\(A\): Leiterquerschnitt in \(\mathrm{mm}^2\)</li>
         </ul>
       
@@ -703,6 +703,7 @@
   </div>
 </body>
 </html>
+
 
 
 
