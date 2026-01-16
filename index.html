@@ -170,6 +170,10 @@
     .tablelike .v{ color: var(--text); font-size: 13px; }
 
     footer{ margin-top: 14px; text-align:center; color: var(--muted); font-size: 13px; font-weight: 400; }
+
+    /* Ausgabe ausblenden: Rechenweg + Kurzwerte */
+    #output { display: none; }
+    
   </style>
 </head>
 
@@ -349,7 +353,7 @@
         <button class="action-btn" id="btnClear">Eingaben leeren</button>
       </div>
 
-      <div class="resultgrid">
+      <div class="resultgrid" id="output">
         <div>
           <div id="statusBox" class="status">
             <h3 style="margin:0 0 6px;">Ergebnis</h3>
@@ -721,3 +725,4 @@
 
 </body>
 </html>
+
