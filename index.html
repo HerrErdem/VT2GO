@@ -78,7 +78,6 @@
 
     .muted{ color: var(--muted); font-size: 14px; font-weight: 400; }
 
-    /* Rechner UI */
     .formgrid{
       display:grid;
       gap:12px;
@@ -264,11 +263,24 @@
         </div>
 
         <div class="field">
-          <label>Belastete Adern</label>
+          <label>Belastete Adern (Systemannahme)</label>
           <select id="cores">
             <option value="" selected>Bitte auswählen…</option>
             <option value="2">2 (L + N)</option>
             <option value="3">3 (L1 + L2 + L3)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Mehradrige Leitung: stromführende Adern (≤ 10 mm²)</label>
+          <select id="multiCores">
+            <option value="" selected>Bitte auswählen…</option>
+            <option value="5">5 Adern</option>
+            <option value="7">7 Adern</option>
+            <option value="10">10 Adern</option>
+            <option value="14">14 Adern</option>
+            <option value="19">19 Adern</option>
+            <option value="24">24 Adern</option>
           </select>
         </div>
 
@@ -378,13 +390,19 @@
 
     const IN_STEPS = [6,10,13,16,20,25,32,40,50,63];
 
+    // Temperatur-Umrechnungsfaktoren
     const TEMP_FACTORS_GUMMI60 = {20:1.15, 30:1.00, 35:0.91, 40:0.82, 45:0.71, 50:0.58};
     const TEMP_FACTORS_PVC70   = {20:1.12, 30:1.00, 35:0.94, 40:0.87, 45:0.79, 50:0.71};
 
-    const HAUF_EINLAGIG = {1:1.00,2:0.85,3:0.79,4:0.75,5:0.73,6:0.72,7:0.72,8:0.71,9:0.70,10:0.70};
+    // Häufung (Fußboden/Wand)
+    const HAUF_EINLAGIG   = {1:1.00,2:0.85,3:0.79,4:0.75,5:0.73,6:0.72,7:0.72,8:0.71,9:0.70,10:0.70};
     const HAUF_GEBUENDELT = {1:1.00,2:0.80,3:0.70,4:0.65,5:0.60,6:0.57,7:0.54,8:0.52,9:0.50,10:0.48};
 
+    // Trommelbetrieb: Anzahl Lagen
     const TROMMEL = {0:1.00, 1:0.80, 2:0.61, 3:0.49, 4:0.42, 5:0.38};
+
+    // Mehradrige Leitungen (≤ 10 mm²): Anzahl stromführender Adern → Faktor
+    const MULTI_CORE_FACTORS = {5:0.75, 7:0.65, 10:0.55, 14:0.50, 19:0.45, 24:0.40};
 
     // Strombelastbarkeit (Referenz: Umgebung 30°C, Verlegung auf/an Flächen)
     const IZ_TABLES = {
@@ -398,6 +416,7 @@
       }
     };
 
+    // Helpers
     const el = (id)=>document.getElementById(id);
     const round2 = (x)=>Math.round(x*100)/100;
     const round3 = (x)=>Math.round(x*1000)/1000;
@@ -405,13 +424,13 @@
     function getTempFactor(insul, temp){
       const t = Number(temp);
       if(insul === "gummi60") return TEMP_FACTORS_GUMMI60[t] ?? null;
-      if(insul === "pvc70") return TEMP_FACTORS_PVC70[t] ?? null;
+      if(insul === "pvc70")   return TEMP_FACTORS_PVC70[t] ?? null;
       return null;
     }
 
     function getHaufFactor(type, n){
       const nn = Math.max(1, Math.min(10, Number(n)));
-      if(type === "einlagig") return HAUF_EINLAGIG[nn] ?? null;
+      if(type === "einlagig")   return HAUF_EINLAGIG[nn] ?? null;
       if(type === "gebuendelt") return HAUF_GEBUENDELT[nn] ?? null;
       return null;
     }
@@ -456,16 +475,15 @@
       if(kind === "ok") box.classList.add("ok");
       else if(kind === "warn") box.classList.add("warn");
       else if(kind === "bad") box.classList.add("bad");
-      el("statusText").innerHTML = `<div>${text}</div>${detail ? `<div class="small" style="margin-top:6px;">${detail}</div>` : ""}`;
+      el("statusText").innerHTML =
+        `<div>${text}</div>${detail ? `<div class="small" style="margin-top:6px;">${detail}</div>` : ""}`;
     }
 
     function clearInputs(){
       ["nLoad","pEach","u","cosphi","len","duMax","haufN"].forEach(id=>el(id).value="");
-
-      ["InSelect","tableType","cores","insul","temp","haufType","layers","material"].forEach(id=>{
+      ["InSelect","tableType","cores","multiCores","insul","temp","haufType","layers","material"].forEach(id=>{
         if(el(id)) el(id).value = "";
       });
-
       el("sys").value = "1p";
 
       setStatus("status", "Noch keine Berechnung.", "");
@@ -478,21 +496,22 @@
     function validateRequired(){
       const missing = [];
 
-      const nLoad = el("nLoad").value.trim();
-      const pEach = el("pEach").value.trim();
-      const U = el("u").value.trim();
-      const cosphi = el("cosphi").value.trim();
-      const len = el("len").value.trim();
-      const InSel = el("InSelect").value;
-      const duMax = el("duMax").value.trim();
+      const nLoad     = el("nLoad").value.trim();
+      const pEach     = el("pEach").value.trim();
+      const U         = el("u").value.trim();
+      const cosphi    = el("cosphi").value.trim();
+      const len       = el("len").value.trim();
+      const InSel     = el("InSelect").value;
+      const duMax     = el("duMax").value.trim();
       const tableType = el("tableType").value;
-      const cores = el("cores").value;
-      const insul = el("insul").value;
-      const temp = el("temp").value;
-      const haufType = el("haufType").value;
-      const haufN = el("haufN").value.trim();
-      const layers = el("layers").value;
-      const material = el("material").value;
+      const cores     = el("cores").value;
+      const multi     = el("multiCores").value;
+      const insul     = el("insul").value;
+      const temp      = el("temp").value;
+      const haufType  = el("haufType").value;
+      const haufN     = el("haufN").value.trim();
+      const layers    = el("layers").value;
+      const material  = el("material").value;
 
       if(!nLoad) missing.push("Anzahl Verbraucher");
       if(!pEach) missing.push("Wirkleistung je Verbraucher");
@@ -503,6 +522,7 @@
       if(!duMax) missing.push("zulässiger Spannungsfall Δu_max");
       if(!tableType) missing.push("Leitungstabelle");
       if(!cores) missing.push("belastete Adern");
+      if(!multi) missing.push("stromführende Adern (mehradrige Leitung ≤ 10 mm²)");
       if(!insul) missing.push("Isolierstoff");
       if(!temp) missing.push("Umgebungstemperatur");
       if(!haufType) missing.push("Häufung (Art)");
@@ -520,34 +540,36 @@
         return;
       }
 
-      const sys = el("sys").value;
-
-      const nLoad = Number(el("nLoad").value);
-      const pEach = Number(el("pEach").value);
-      const U = Number(el("u").value);
-      const cosphi = Number(el("cosphi").value);
-      const l = Number(el("len").value);
+      // Inputs
+      const sys     = el("sys").value;
+      const nLoad   = Number(el("nLoad").value);
+      const pEach   = Number(el("pEach").value);
+      const U       = Number(el("u").value);
+      const cosphi  = Number(el("cosphi").value);
+      const l       = Number(el("len").value);
 
       const InSelect = el("InSelect").value;
-      const duMax = Number(el("duMax").value);
+      const duMax    = Number(el("duMax").value);
 
       const tableType = el("tableType").value;
-      const cores = Number(el("cores").value);
+      const cores     = Number(el("cores").value);
 
-      const insul = el("insul").value;
-      const temp = Number(el("temp").value);
+      const multiCores = Number(el("multiCores").value);
+
+      const insul    = el("insul").value;
+      const temp     = Number(el("temp").value);
 
       const haufType = el("haufType").value;
-      const haufN = Number(el("haufN").value);
+      const haufN    = Number(el("haufN").value);
 
-      const layers = Number(el("layers").value);
+      const layers   = Number(el("layers").value);
       const material = el("material").value;
 
       const kappa = (material === "al3597") ? 35.97 : 57;
 
       // 1) Leistung + Betriebsstrom
       const Pges = nLoad * pEach;
-      const Ib = computeIb(sys, Pges, U, cosphi);
+      const Ib   = computeIb(sys, Pges, U, cosphi);
 
       // 2) I_N
       let In;
@@ -561,16 +583,18 @@
       }
 
       // 3) Faktoren
-      const fT = getTempFactor(insul, temp);
-      const fH = getHaufFactor(haufType, haufN);
+      const fT  = getTempFactor(insul, temp);
+      const fH  = getHaufFactor(haufType, haufN);
       const fTr = TROMMEL[layers] ?? null;
+      const fA  = MULTI_CORE_FACTORS[multiCores] ?? null;
 
-      if(fT === null || fH === null || fTr === null){
-        setStatus("bad", "Faktoren konnten nicht bestimmt werden.", "Bitte prüfe Temperatur/Häufung/Trommel-Eingaben.");
+      if(fT === null || fH === null || fTr === null || fA === null){
+        setStatus("bad", "Faktoren konnten nicht bestimmt werden.",
+          "Bitte prüfe Temperatur/Häufung/Trommel/mehradrige-Adern-Eingaben.");
         return;
       }
 
-      const f = fT * fH * fTr;
+      const f = fT * fH * fTr * fA;
 
       // 4) Erforderliche Tabellen-Strombelastbarkeit
       const IrReq = In / f;
@@ -585,18 +609,20 @@
         du = (dU / U) * 100;
       }
 
-      // Outputs
+      // Outputs Kurzwerte
       el("qIb").textContent = `${round2(Ib)} A`;
       el("qIn").textContent = `${In} A (${InExplain})`;
-      el("qF").textContent = `${round3(f)} (= ${round2(fT)} · ${round2(fH)} · ${round2(fTr)})`;
+      el("qF").textContent  = `${round3(f)} (= ${round2(fT)} · ${round2(fH)} · ${round2(fTr)} · ${round2(fA)})`;
       el("qIr").textContent = `${round2(IrReq)} A`;
-      el("qA").textContent = pick.A ? `${pick.A} mm² (I_r=${pick.Ir} A)` : `–`;
+      el("qA").textContent  = pick.A ? `${pick.A} mm² (I_r=${pick.Ir} A)` : `–`;
       el("qDu").textContent = pick.A ? `${round2(du)} % (ΔU=${round2(dU)} V)` : `–`;
 
-      const nennstromOk = Ib <= In;
+      // Checks
+      const nennstromOk   = Ib <= In;
       const querschnittOk = pick.A !== null;
-      const spannungsOk = (pick.A !== null) ? (du <= duMax) : false;
+      const spannungsOk   = (pick.A !== null) ? (du <= duMax) : false;
 
+      // Formeln
       const formulaIb = (sys==="dc")
         ? `I_B=\\frac{P_{ges}}{U}`
         : (sys==="3p")
@@ -609,6 +635,7 @@
           ? `\\Delta U=\\frac{\\sqrt{3}\\,l\\,I\\,\\cos\\varphi}{\\kappa\\,A}`
           : `\\Delta U=\\frac{2\\,l\\,I\\,\\cos\\varphi}{\\kappa\\,A}`;
 
+      // Rechenweg
       el("steps").innerHTML = `
         <div class="small">1) Gesamtwirkleistung</div>
         <div class="mono">Pges = ${nLoad} · ${pEach} W = ${Pges} W</div>
@@ -626,8 +653,13 @@
 
         <hr class="hr">
         <div class="small">4) Korrekturfaktoren</div>
-        <div class="mono">f_T = ${fT} | f_H = ${fH} | f_Tr = ${fTr}</div>
-        <div>$$ f = f_T\\cdot f_H\\cdot f_{Tr} = ${round3(f)} $$</div>
+        <div class="mono">
+          f_T = ${fT} (Temperatur)<br>
+          f_H = ${fH} (Häufung)<br>
+          f_Tr = ${fTr} (Trommel)<br>
+          f_A = ${fA} (${multiCores} stromführende Adern, ≤ 10 mm²)
+        </div>
+        <div>$$ f = f_T\\cdot f_H\\cdot f_{Tr}\\cdot f_A = ${round3(f)} $$</div>
 
         <hr class="hr">
         <div class="small">5) Erforderlicher Tabellenwert</div>
@@ -651,12 +683,16 @@
         ` : `<div class="mono">Spannungsfall nicht berechnet (kein Querschnitt).</div>`}
       `;
 
+      // Status
       if(!nennstromOk){
-        setStatus("bad", "Nennstromregel verletzt: Sicherung zu klein.", "Wähle eine höhere Sicherungsstufe oder reduziere die Last.");
+        setStatus("bad", "Nennstromregel verletzt: Sicherung zu klein.",
+          "Wähle eine höhere Sicherungsstufe oder reduziere die Last.");
       } else if(!querschnittOk){
-        setStatus("bad", "Kein Querschnitt gefunden (Strombelastbarkeit).", "Wähle andere Tabellenannahmen oder erhöhe Querschnitt außerhalb der Tabelle.");
+        setStatus("bad", "Kein Querschnitt gefunden (Strombelastbarkeit).",
+          "Wähle andere Tabellenannahmen oder erhöhe Querschnitt außerhalb der Tabelle.");
       } else if(!spannungsOk){
-        setStatus("warn", "Strombelastbarkeit OK, aber Spannungsfall zu hoch.", "Querschnitt erhöhen oder Leitungslänge reduzieren.");
+        setStatus("warn", "Strombelastbarkeit OK, aber Spannungsfall zu hoch.",
+          "Querschnitt erhöhen oder Leitungslänge reduzieren.");
       } else {
         setStatus("ok", "Dimensionierung OK.", `Ergebnis: ${pick.A} mm² bei Δu=${round2(du)} %.`);
       }
@@ -664,10 +700,10 @@
       if(window.MathJax) MathJax.typesetPromise();
     }
 
+    // Events
     el("btnCalc").addEventListener("click", calc);
     el("btnClear").addEventListener("click", clearInputs);
   </script>
 
 </body>
 </html>
-
