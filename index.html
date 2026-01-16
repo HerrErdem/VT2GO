@@ -118,7 +118,6 @@
       border: 1px solid rgba(106,166,255,.30);
       background: rgba(106,166,255,.10);
     }
-    .callout strong{ font-weight: 700; color: var(--text); }
 
     .list{ margin:10px 0 0; padding-left: 18px; color: var(--text); font-weight: 400; }
     .list li{ margin: 6px 0; }
@@ -178,16 +177,8 @@
       font-size: 14px;
       outline:none;
     }
-    .field input:focus, .field select:focus{
-      border-color: rgba(106,166,255,.55);
-      box-shadow: 0 0 0 3px rgba(106,166,255,.18);
-    }
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top: 10px;
-    }
+
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
     .action-btn{
       cursor:pointer;
       padding: 10px 14px;
@@ -265,9 +256,10 @@
 
       <div class="nav">
         <a class="btn" href="#grundlagen">Grundlagen</a>
-        <a class="btn" href="#rechner">Rechner</a>
+        <a class="btn" href="#stromregel">Nennstromregel</a>
         <a class="btn" href="#verlegebedingungen">Verlegebedingungen</a>
         <a class="btn" href="#spannungsfall">Spannungsfall</a>
+        <a class="btn" href="#rechner">Rechner</a>
       </div>
     </header>
 
@@ -292,7 +284,7 @@
           <ul class="list">
             <li>Last erfassen: \(P\), \(U\), \(\cos\varphi\)</li>
             <li>Betriebsstrom \(I_B\) bestimmen</li>
-            <li>Schutzeinrichtung \(I_N\) festlegen</li>
+            <li>Schutzeinrichtung \(I_N\) auswählen (genormte Stufen)</li>
             <li>Korrekturfaktoren anwenden → erforderliche Tabellen-Strombelastbarkeit \(I_r\)</li>
             <li>Querschnitt über \(I_r\) auswählen</li>
             <li>Spannungsfall \(\Delta u\) prüfen</li>
@@ -301,7 +293,7 @@
           <div class="kpi">
             <div class="box">
               <p class="title">Spannungsfall-Grenzwert</p>
-              <p class="value">Planung häufig 5&nbsp;% (hier im Rechner frei einstellbar)</p>
+              <p class="value">Planung häufig 5&nbsp;% (je nach Anwendung strenger)</p>
             </div>
             <div class="box">
               <p class="title">Mobilbetrieb</p>
@@ -316,195 +308,22 @@
         </div>
       </section>
 
-      <!-- =========================
-           NEU: RECHNER
-      ========================== -->
-      <section id="rechner">
-        <h2>Rechner: Leitungsdimensionierung (VT-Praxis)</h2>
-        <p class="muted">
-          Der Rechner bildet das Tabellenprinzip ab: \(I_B \rightarrow I_N \rightarrow I_r \rightarrow A\) und anschließend Spannungsfallprüfung.
-          Standardwerte sind so gesetzt, dass du damit die Beispielaufgabe (2 aktive PA, 40&nbsp;m, 40&nbsp;°C, 3 Leitungen einlagig, 2 Trommellagen, CEE 16&nbsp;A) direkt durchrechnen kannst.
-        </p>
-
-        <div class="formgrid">
-          <div class="field">
-            <label>System</label>
-            <select id="sys">
-              <option value="1p">Wechselstrom 1~ (230 V)</option>
-              <option value="3p">Drehstrom 3~ (400 V)</option>
-              <option value="dc">Gleichstrom ⎓</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Anzahl Verbraucher</label>
-            <input id="nLoad" type="number" min="1" step="1" value="2">
-          </div>
-
-          <div class="field">
-            <label>Wirkleistung je Verbraucher \(P\) in W</label>
-            <input id="pEach" type="number" min="0" step="1" value="1250">
-          </div>
-
-          <div class="field">
-            <label>Spannung \(U\) in V</label>
-            <input id="u" type="number" min="1" step="1" value="230">
-          </div>
-
-          <div class="field">
-            <label>Leistungsfaktor \(\cos\varphi\)</label>
-            <input id="cosphi" type="number" min="0" max="1" step="0.01" value="0.90">
-          </div>
-
-          <div class="field">
-            <label>Leitungslänge \(l\) (einfache Strecke) in m</label>
-            <input id="len" type="number" min="0" step="0.1" value="40">
-          </div>
-
-          <div class="field">
-            <label>Schutzeinrichtung \(I_N\)</label>
-            <select id="InMode">
-              <option value="cee16">CEE 16 A (fix)</option>
-              <option value="auto">Auto: nächsthöhere Normstufe ≥ \(I_B\)</option>
-              <option value="manual">Manuell wählen</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Manuell: \(I_N\) in A (nur wenn „Manuell“)</label>
-            <input id="InManual" type="number" min="1" step="1" value="16" disabled>
-          </div>
-
-          <div class="field">
-            <label>Zulässiger Spannungsfall \(\Delta u_{\max}\) in %</label>
-            <input id="duMax" type="number" min="0" step="0.1" value="5">
-          </div>
-
-          <div class="field">
-            <label>Leitung (Tabelle Strombelastbarkeit)</label>
-            <select id="tableType">
-              <option value="hh">Flexible Leitungen – Haus/Handgeräte</option>
-              <option value="other">Flexible Leitungen – alle anderen Anwendungen</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Belastete Adern</label>
-            <select id="cores">
-              <option value="2" selected>2 (L + N)</option>
-              <option value="3">3 (L1 + L2 + L3)</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Isolierstoff / zul. Betriebstemperatur</label>
-            <select id="insul">
-              <option value="gummi60" selected>Gummi (60 °C)</option>
-              <option value="pvc70">PVC/PE (70 °C)</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Umgebungstemperatur</label>
-            <select id="temp">
-              <option value="20">20 °C</option>
-              <option value="30">30 °C</option>
-              <option value="35">35 °C</option>
-              <option value="40" selected>40 °C</option>
-              <option value="45">45 °C</option>
-              <option value="50">50 °C</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Häufung (Fußboden/Wand)</label>
-            <select id="haufType">
-              <option value="einlagig" selected>einlagig</option>
-              <option value="gebuendelt">gebündelt</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Anzahl parallel verlegter Leitungen (Häufung)</label>
-            <input id="haufN" type="number" min="1" max="10" step="1" value="3">
-          </div>
-
-          <div class="field">
-            <label>Trommelbetrieb: Anzahl Lagen (aufgewickelt)</label>
-            <select id="layers">
-              <option value="0">keine / vollständig abgerollt</option>
-              <option value="1">1 Lage</option>
-              <option value="2" selected>2 Lagen</option>
-              <option value="3">3 Lagen</option>
-              <option value="4">4 Lagen</option>
-              <option value="5">5 Lagen</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Leitermaterial (für Spannungsfall über \(\kappa\))</label>
-            <select id="material">
-              <option value="cu57" selected>Kupfer (E-Cu) \(\kappa = 57\)</option>
-              <option value="al3597">Aluminium \(\kappa = 35{,}97\)</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="action-btn" id="btnCalc">Berechnen</button>
-          <button class="action-btn" id="btnFillExample">Beispielwerte laden (Aufgabe 1)</button>
-          <button class="action-btn" id="btnReset">Zurücksetzen</button>
-        </div>
-
-        <div class="resultgrid">
-          <div>
-            <div id="statusBox" class="status">
-              <h3 style="margin:0 0 6px;">Ergebnis</h3>
-              <div class="small" id="statusText">Noch keine Berechnung.</div>
-            </div>
-
-            <div class="hr"></div>
-
-            <h3>Rechenweg (Schritt für Schritt)</h3>
-            <div id="steps" class="formula">
-              <span class="muted">Nach „Berechnen“ erscheint hier der vollständige Rechenweg mit Formeln.</span>
-            </div>
-          </div>
-
-          <div>
-            <h3>Kurzwerte</h3>
-            <div class="tablelike" id="quick">
-              <div class="row"><div class="k">Betriebsstrom \(I_B\)</div><div class="v mono" id="qIb">–</div></div>
-              <div class="row"><div class="k">Schutz \(I_N\)</div><div class="v mono" id="qIn">–</div></div>
-              <div class="row"><div class="k">Faktorprodukt \(f\)</div><div class="v mono" id="qF">–</div></div>
-              <div class="row"><div class="k">Erforderlich \(I_r\)</div><div class="v mono" id="qIr">–</div></div>
-              <div class="row"><div class="k">Querschnitt \(A\)</div><div class="v mono" id="qA">–</div></div>
-              <div class="row"><div class="k">Spannungsfall \(\Delta u\)</div><div class="v mono" id="qDu">–</div></div>
-            </div>
-            <p class="muted" style="margin-top:10px;">
-              Hinweis: Tabellenwerte gelten als Referenz (hier: Umgebung 30&nbsp;°C gemäß Tabelle Strombelastbarkeit).
-              Abweichungen werden über die Korrekturfaktoren berücksichtigt.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- =========================
-           DEIN BESTEHENDER CONTENT
-      ========================== -->
-
-      <section id="stromarten-nennstromregel" class="stack">
+      <section id="stromregel">
         <h2>Nennstromregel, Scheinleistung und Betriebsstrom</h2>
         <p>
-          Grundlage jeder Leitungsdimensionierung ist die <strong>Nennstromregel</strong>. Sie stellt sicher, dass
-          Verbraucher, Absicherung und Leitung zueinander passen:
+          Grundlage jeder Leitungsdimensionierung ist die <strong>Nennstromregel</strong>:
         </p>
         <div class="formula">$$ I_B \le I_N \le I_Z $$</div>
         <p class="muted">
-          \(I_B\): Strom im Normalbetrieb &nbsp;–&nbsp;
+          \(I_B\): Betriebsstrom &nbsp;–&nbsp;
           \(I_N\): Bemessungsstrom der Sicherung/Steckvorrichtung &nbsp;–&nbsp;
           \(I_Z\): zulässiger Dauerstrom der Leitung unter realen Bedingungen.
         </p>
+
+        <h3>Genormte Bemessungsstromstärken</h3>
+        <div class="formula">
+          $$ I_N \in \{6,\;10,\;13,\;16,\;20,\;25,\;32,\;40,\;50,\;63\}\,\mathrm{A} $$
+        </div>
       </section>
 
       <section id="verlegebedingungen" class="grid-2">
@@ -514,7 +333,7 @@
         </div>
 
         <div>
-          <h2>Zulässige Strombelastbarkeit \(I_Z\): Einfluss von Verlegebedingungen und Korrekturfaktoren</h2>
+          <h2>Zulässige Strombelastbarkeit \(I_Z\): Korrekturfaktoren</h2>
           <p>
             Tabellenwerte gelten unter Referenzbedingungen. Im Veranstaltungsbetrieb weichen die realen Verlegebedingungen
             häufig davon ab. Daher werden Korrekturfaktoren angewendet:
@@ -523,16 +342,8 @@
           <p class="muted">
             \(I_r\): Tabellenwert (Referenz) &nbsp;–&nbsp;
             \(f_T\): Temperaturfaktor &nbsp;–&nbsp;
-            \(f_H\): Häufungsfaktor &nbsp;–&nbsp;
-            \(f_{Tr}\): Trommelfaktor (aufgewickelt).
-          </p>
-        </div>
-
-        <div class="grid-full" id="verlegebeispiel-2">
-          <h3>Beispielhafter Anwendungsfall (ungünstige Verlegebedingungen)</h3>
-          <p class="muted">
-            Genau diesen Fall kannst du im Rechner oben nachbilden (40&nbsp;°C, Häufung, Trommelbetrieb).
-            Entscheidend ist: Das Faktorprodukt kann die zulässige Strombelastbarkeit deutlich reduzieren.
+            \(f_H\): Häufung &nbsp;–&nbsp;
+            \(f_{Tr}\): Trommelbetrieb (Lagen).
           </p>
         </div>
       </section>
@@ -551,7 +362,6 @@
         </div>
 
         <h3>Formeln</h3>
-
         <div class="two-cards">
           <div>
             <h3>Wechselstrom (1~)</h3>
@@ -562,7 +372,6 @@
             <div class="formula">$$ \Delta U=\frac{2\cdot l\cdot I}{\kappa\cdot A} $$</div>
           </div>
         </div>
-
         <div style="margin-top:14px;">
           <h3>Drehstrom (3~)</h3>
           <div class="formula">$$ \Delta U=\frac{\sqrt{3}\cdot l\cdot I\cdot \cos\varphi}{\kappa\cdot A} $$</div>
@@ -579,6 +388,185 @@
         </p>
       </section>
 
+      <!-- =========================
+           RECHNER AM ENDE
+      ========================== -->
+      <section id="rechner">
+        <h2>Rechner: Leitungsdimensionierung (VT)</h2>
+        <p class="muted">
+          Bitte Werte eingeben und „Berechnen“ klicken. Der Rechner wählt den Querschnitt so, dass
+          die Strombelastbarkeit (mit Faktoren) und der Spannungsfall geprüft werden können.
+        </p>
+
+        <div class="formgrid">
+          <div class="field">
+            <label>System</label>
+            <select id="sys">
+              <option value="1p" selected>Wechselstrom 1~</option>
+              <option value="3p">Drehstrom 3~</option>
+              <option value="dc">Gleichstrom ⎓</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Anzahl Verbraucher</label>
+            <input id="nLoad" type="number" min="1" step="1" placeholder="z. B. 2">
+          </div>
+
+          <div class="field">
+            <label>Wirkleistung je Verbraucher \(P\) in W</label>
+            <input id="pEach" type="number" min="0" step="1" placeholder="z. B. 1250">
+          </div>
+
+          <div class="field">
+            <label>Spannung \(U\) in V</label>
+            <input id="u" type="number" min="1" step="1" placeholder="z. B. 230">
+          </div>
+
+          <div class="field">
+            <label>Leistungsfaktor \(\cos\varphi\)</label>
+            <input id="cosphi" type="number" min="0" max="1" step="0.01" placeholder="z. B. 0.9">
+          </div>
+
+          <div class="field">
+            <label>Leitungslänge \(l\) (einfache Strecke) in m</label>
+            <input id="len" type="number" min="0" step="0.1" placeholder="z. B. 40">
+          </div>
+
+          <div class="field">
+            <label>Sicherung / Schutzorgan \(I_N\)</label>
+            <select id="InSelect">
+              <option value="" selected>Bitte auswählen…</option>
+              <option value="auto">Auto (nächstgrößer ≥ \(I_B\))</option>
+              <option value="6">6 A</option>
+              <option value="10">10 A</option>
+              <option value="13">13 A</option>
+              <option value="16">16 A</option>
+              <option value="20">20 A</option>
+              <option value="25">25 A</option>
+              <option value="32">32 A</option>
+              <option value="40">40 A</option>
+              <option value="50">50 A</option>
+              <option value="63">63 A</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Zulässiger Spannungsfall \(\Delta u_{\max}\) in %</label>
+            <input id="duMax" type="number" min="0" step="0.1" placeholder="z. B. 5">
+          </div>
+
+          <div class="field">
+            <label>Leitungstabelle</label>
+            <select id="tableType">
+              <option value="" selected>Bitte auswählen…</option>
+              <option value="hh">Flexible Leitungen – Haus/Handgeräte</option>
+              <option value="other">Flexible Leitungen – alle anderen Anwendungen</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Belastete Adern</label>
+            <select id="cores">
+              <option value="" selected>Bitte auswählen…</option>
+              <option value="2">2 (L + N)</option>
+              <option value="3">3 (L1 + L2 + L3)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Isolierstoff</label>
+            <select id="insul">
+              <option value="" selected>Bitte auswählen…</option>
+              <option value="gummi60">Gummi (60 °C)</option>
+              <option value="pvc70">PVC/PE (70 °C)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Umgebungstemperatur</label>
+            <select id="temp">
+              <option value="" selected>Bitte auswählen…</option>
+              <option value="20">20 °C</option>
+              <option value="30">30 °C</option>
+              <option value="35">35 °C</option>
+              <option value="40">40 °C</option>
+              <option value="45">45 °C</option>
+              <option value="50">50 °C</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Häufung (Fußboden/Wand)</label>
+            <select id="haufType">
+              <option value="" selected>Bitte auswählen…</option>
+              <option value="einlagig">einlagig</option>
+              <option value="gebuendelt">gebündelt</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Anzahl parallel verlegter Leitungen (1–10)</label>
+            <input id="haufN" type="number" min="1" max="10" step="1" placeholder="z. B. 3">
+          </div>
+
+          <div class="field">
+            <label>Trommelbetrieb: Anzahl Lagen</label>
+            <select id="layers">
+              <option value="" selected>Bitte auswählen…</option>
+              <option value="0">keine / vollständig abgerollt</option>
+              <option value="1">1 Lage</option>
+              <option value="2">2 Lagen</option>
+              <option value="3">3 Lagen</option>
+              <option value="4">4 Lagen</option>
+              <option value="5">5 Lagen</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Leitermaterial (für \(\kappa\))</label>
+            <select id="material">
+              <option value="" selected>Bitte auswählen…</option>
+              <option value="cu57">Kupfer (E-Cu) \(\kappa = 57\)</option>
+              <option value="al3597">Aluminium \(\kappa = 35{,}97\)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="action-btn" id="btnCalc">Berechnen</button>
+          <button class="action-btn" id="btnClear">Eingaben leeren</button>
+        </div>
+
+        <div class="resultgrid">
+          <div>
+            <div id="statusBox" class="status">
+              <h3 style="margin:0 0 6px;">Ergebnis</h3>
+              <div class="small" id="statusText">Noch keine Berechnung.</div>
+            </div>
+
+            <div class="hr"></div>
+
+            <h3>Rechenweg</h3>
+            <div id="steps" class="formula">
+              <span class="muted">Nach „Berechnen“ erscheint hier der Rechenweg.</span>
+            </div>
+          </div>
+
+          <div>
+            <h3>Kurzwerte</h3>
+            <div class="tablelike">
+              <div class="row"><div class="k">Betriebsstrom \(I_B\)</div><div class="v mono" id="qIb">–</div></div>
+              <div class="row"><div class="k">Schutz \(I_N\)</div><div class="v mono" id="qIn">–</div></div>
+              <div class="row"><div class="k">Faktorprodukt \(f\)</div><div class="v mono" id="qF">–</div></div>
+              <div class="row"><div class="k">Erforderlich \(I_r\)</div><div class="v mono" id="qIr">–</div></div>
+              <div class="row"><div class="k">Querschnitt \(A\)</div><div class="v mono" id="qA">–</div></div>
+              <div class="row"><div class="k">Spannungsfall \(\Delta u\)</div><div class="v mono" id="qDu">–</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <footer>
@@ -589,53 +577,47 @@
 
   <script>
     // ============================
-    // Tabellen (aus deinen Bildern / Tabellenprinzip)
+    // Tabellen / Faktoren
     // ============================
 
-    // Normstufen für In (vereinfacht)
     const IN_STEPS = [6,10,13,16,20,25,32,40,50,63];
 
-    // Temperaturfaktoren (UmgebungsT) bezogen auf 30°C = 1 (wie in deiner Tabelle)
-    // Gummi (zul. Betriebstemperatur 60°C)
     const TEMP_FACTORS_GUMMI60 = {20:1.15, 30:1.00, 35:0.91, 40:0.82, 45:0.71, 50:0.58};
-    // PVC/PE (zul. Betriebstemperatur 70°C)
     const TEMP_FACTORS_PVC70   = {20:1.12, 30:1.00, 35:0.94, 40:0.87, 45:0.79, 50:0.71};
 
-    // Häufung auf Fußboden/Wand: Faktoren nach Anzahl Leitungen (1..10)
     const HAUF_EINLAGIG = {1:1.00,2:0.85,3:0.79,4:0.75,5:0.73,6:0.72,7:0.72,8:0.71,9:0.70,10:0.70};
     const HAUF_GEBUENDELT = {1:1.00,2:0.80,3:0.70,4:0.65,5:0.60,6:0.57,7:0.54,8:0.52,9:0.50,10:0.48};
 
-    // Aufgewickelte Leitungen (Trommel/Spule): Faktor nach Lagen
     const TROMMEL = {0:1.00, 1:0.80, 2:0.61, 3:0.49, 4:0.42, 5:0.38};
 
-    // Strombelastbarkeitstabelle (Referenz) – flexible Leitungen bei Verlegung auf/ an Flächen, Umgebung 30°C
-    // Zwei Tabellenoptionen:
-    // hh = "Haus- und Handgeräte" (dein Fall in der Aufgabe; 6mm² -> 40A bei 2 belasteten Adern)
-    // other = "alle anderen Anwendungen"
+    // Strombelastbarkeit (Referenz: Umgebung 30°C, Verlegung auf/an Flächen)
     const IZ_TABLES = {
       hh: {
         "2": {0.75:6, 1:10, 1.5:16, 2.5:25, 4:32, 6:40, 10:63},
         "3": {0.75:6, 1:10, 1.5:16, 2.5:20, 4:25}
       },
       other: {
-        // gilt für 2 oder 3 stromführende Adern (laut Tabelle)
         "2": {0.75:12, 1:15, 1.5:18, 2.5:26, 4:34, 6:44, 10:61, 16:82, 25:108, 35:135, 50:168},
         "3": {0.75:12, 1:15, 1.5:18, 2.5:26, 4:34, 6:44, 10:61, 16:82, 25:108, 35:135, 50:168}
       }
     };
 
-    function round2(x){ return Math.round(x*100)/100; }
-    function round3(x){ return Math.round(x*1000)/1000; }
+    const el = (id)=>document.getElementById(id);
+    const round2 = (x)=>Math.round(x*100)/100;
+    const round3 = (x)=>Math.round(x*1000)/1000;
 
     function getTempFactor(insul, temp){
       const t = Number(temp);
-      if(insul === "gummi60") return TEMP_FACTORS_GUMMI60[t] ?? 1.00;
-      return TEMP_FACTORS_PVC70[t] ?? 1.00;
+      if(insul === "gummi60") return TEMP_FACTORS_GUMMI60[t] ?? null;
+      if(insul === "pvc70") return TEMP_FACTORS_PVC70[t] ?? null;
+      return null;
     }
 
     function getHaufFactor(type, n){
       const nn = Math.max(1, Math.min(10, Number(n)));
-      return (type === "gebuendelt" ? HAUF_GEBUENDELT[nn] : HAUF_EINLAGIG[nn]) ?? 1.00;
+      if(type === "einlagig") return HAUF_EINLAGIG[nn] ?? null;
+      if(type === "gebuendelt") return HAUF_GEBUENDELT[nn] ?? null;
+      return null;
     }
 
     function nextInStep(ib){
@@ -660,67 +642,16 @@
     }
 
     function computeIb(sys, Pges, U, cosphi){
-      if(sys === "dc"){
-        return Pges / U;
-      }
-      if(sys === "3p"){
-        // Drehstrom über Wirkleistung P: I = P/(sqrt(3)*U*cosφ)
-        return Pges / (Math.sqrt(3)*U*cosphi);
-      }
-      // 1~
+      if(sys === "dc") return Pges / U;
+      if(sys === "3p") return Pges / (Math.sqrt(3)*U*cosphi);
       return Pges / (U*cosphi);
     }
 
     function computeDeltaU(sys, l, I, cosphi, kappa, A){
       if(A <= 0) return NaN;
-      if(sys === "dc"){
-        return (2*l*I) / (kappa*A);
-      }
-      if(sys === "3p"){
-        return (Math.sqrt(3)*l*I*cosphi) / (kappa*A);
-      }
-      // 1~
+      if(sys === "dc") return (2*l*I) / (kappa*A);
+      if(sys === "3p") return (Math.sqrt(3)*l*I*cosphi) / (kappa*A);
       return (2*l*I*cosphi) / (kappa*A);
-    }
-
-    // ============================
-    // UI Wiring
-    // ============================
-
-    const el = (id)=>document.getElementById(id);
-
-    function setExample(){
-      el("sys").value = "1p";
-      el("nLoad").value = 2;
-      el("pEach").value = 1250;
-      el("u").value = 230;
-      el("cosphi").value = 0.90;
-      el("len").value = 40;
-
-      el("InMode").value = "cee16";
-      el("InManual").value = 16; el("InManual").disabled = true;
-
-      el("duMax").value = 5;
-
-      el("tableType").value = "hh";
-      el("cores").value = "2";
-
-      el("insul").value = "gummi60";
-      el("temp").value = "40";
-
-      el("haufType").value = "einlagig";
-      el("haufN").value = 3;
-
-      el("layers").value = 2;
-      el("material").value = "cu57";
-    }
-
-    function resetAll(){
-      setExample();
-      setStatus("status", "Noch keine Berechnung.", "");
-      el("steps").innerHTML = '<span class="muted">Nach „Berechnen“ erscheint hier der vollständige Rechenweg mit Formeln.</span>';
-      ["qIb","qIn","qF","qIr","qA","qDu"].forEach(id=>el(id).textContent="–");
-      if(window.MathJax) MathJax.typesetPromise();
     }
 
     function setStatus(kind, text, detail){
@@ -732,22 +663,80 @@
       el("statusText").innerHTML = `<div>${text}</div>${detail ? `<div class="small" style="margin-top:6px;">${detail}</div>` : ""}`;
     }
 
-    el("InMode").addEventListener("change", ()=>{
-      const mode = el("InMode").value;
-      el("InManual").disabled = (mode !== "manual");
-    });
+    function clearInputs(){
+      // Inputs leeren
+      ["nLoad","pEach","u","cosphi","len","duMax","haufN"].forEach(id=>el(id).value="");
+
+      // Selects auf "Bitte auswählen" zurück (wenn vorhanden)
+      ["InSelect","tableType","cores","insul","temp","haufType","layers","material"].forEach(id=>{
+        if(el(id)) el(id).value = "";
+      });
+
+      // System bleibt (optional) auf 1p stehen, damit nicht alles "undefined" ist
+      el("sys").value = "1p";
+
+      // Outputs reset
+      setStatus("status", "Noch keine Berechnung.", "");
+      el("steps").innerHTML = '<span class="muted">Nach „Berechnen“ erscheint hier der Rechenweg.</span>';
+      ["qIb","qIn","qF","qIr","qA","qDu"].forEach(id=>el(id).textContent="–");
+
+      if(window.MathJax) MathJax.typesetPromise();
+    }
+
+    function validateRequired(){
+      const missing = [];
+
+      const nLoad = el("nLoad").value.trim();
+      const pEach = el("pEach").value.trim();
+      const U = el("u").value.trim();
+      const cosphi = el("cosphi").value.trim();
+      const len = el("len").value.trim();
+      const InSel = el("InSelect").value;
+      const duMax = el("duMax").value.trim();
+      const tableType = el("tableType").value;
+      const cores = el("cores").value;
+      const insul = el("insul").value;
+      const temp = el("temp").value;
+      const haufType = el("haufType").value;
+      const haufN = el("haufN").value.trim();
+      const layers = el("layers").value;
+      const material = el("material").value;
+
+      if(!nLoad) missing.push("Anzahl Verbraucher");
+      if(!pEach) missing.push("Wirkleistung je Verbraucher");
+      if(!U) missing.push("Spannung U");
+      if(!cosphi) missing.push("cos φ");
+      if(!len) missing.push("Leitungslänge l");
+      if(!InSel) missing.push("Sicherung I_N");
+      if(!duMax) missing.push("zulässiger Spannungsfall Δu_max");
+      if(!tableType) missing.push("Leitungstabelle");
+      if(!cores) missing.push("belastete Adern");
+      if(!insul) missing.push("Isolierstoff");
+      if(!temp) missing.push("Umgebungstemperatur");
+      if(!haufType) missing.push("Häufung (Art)");
+      if(!haufN) missing.push("Häufung (Anzahl Leitungen)");
+      if(!layers) missing.push("Trommelbetrieb (Lagen)");
+      if(!material) missing.push("Leitermaterial");
+
+      return missing;
+    }
 
     function calc(){
+      const missing = validateRequired();
+      if(missing.length){
+        setStatus("bad", "Eingaben unvollständig.", "Bitte ergänzen: " + missing.join(", "));
+        return;
+      }
+
       const sys = el("sys").value;
+
       const nLoad = Number(el("nLoad").value);
       const pEach = Number(el("pEach").value);
       const U = Number(el("u").value);
       const cosphi = Number(el("cosphi").value);
       const l = Number(el("len").value);
 
-      const InMode = el("InMode").value;
-      const InManual = Number(el("InManual").value);
-
+      const InSelect = el("InSelect").value;
       const duMax = Number(el("duMax").value);
 
       const tableType = el("tableType").value;
@@ -768,57 +757,53 @@
       const Pges = nLoad * pEach;
       const Ib = computeIb(sys, Pges, U, cosphi);
 
-      // 2) In bestimmen
+      // 2) I_N
       let In;
       let InExplain = "";
-      if(InMode === "cee16"){
-        In = 16;
-        InExplain = "CEE 16 A (fix)";
-      } else if(InMode === "auto"){
+      if(InSelect === "auto"){
         In = nextInStep(Ib);
-        InExplain = `Auto: nächsthöhere Normstufe ≥ I_B`;
+        InExplain = "Auto (nächstgrößer ≥ I_B)";
       } else {
-        In = InManual;
-        InExplain = "Manuell";
+        In = Number(InSelect);
+        InExplain = "manuell gewählt";
       }
 
       // 3) Faktoren
       const fT = getTempFactor(insul, temp);
       const fH = getHaufFactor(haufType, haufN);
-      const fTr = TROMMEL[layers] ?? 1.0;
+      const fTr = TROMMEL[layers] ?? null;
+
+      if(fT === null || fH === null || fTr === null){
+        setStatus("bad", "Faktoren konnten nicht bestimmt werden.", "Bitte prüfe Temperatur/Häufung/Trommel-Eingaben.");
+        return;
+      }
 
       const f = fT * fH * fTr;
 
-      // 4) Erforderliche Tabellen-Strombelastbarkeit Ir
-      // Aus I_Z = I_r * f  und Forderung I_Z >= I_N folgt: I_r >= I_N / f
+      // 4) Erforderliche Tabellen-Strombelastbarkeit
       const IrReq = In / f;
 
-      // 5) Querschnitt wählen über Tabelle
+      // 5) Querschnitt aus Tabelle
       const pick = pickCrossSection(tableType, cores, IrReq);
 
-      // 6) Spannungsfall prüfen (mit gewähltem A; wenn nicht vorhanden -> kein Check)
+      // 6) Spannungsfall
       let dU = NaN, du = NaN;
       if(pick.A){
         dU = computeDeltaU(sys, l, Ib, cosphi, kappa, pick.A);
         du = (dU / U) * 100;
       }
 
-      // 7) Statuslogik
-      const nennstromOk = Ib <= In;
-      const querschnittOk = pick.A !== null;
-      const spannungsOk = (pick.A !== null) ? (du <= duMax) : false;
-
-      // Quick values
+      // Outputs
       el("qIb").textContent = `${round2(Ib)} A`;
       el("qIn").textContent = `${In} A (${InExplain})`;
       el("qF").textContent = `${round3(f)} (= ${round2(fT)} · ${round2(fH)} · ${round2(fTr)})`;
-      el("qIr").textContent = `${round2(IrReq)} A (erforderlich)`;
+      el("qIr").textContent = `${round2(IrReq)} A`;
       el("qA").textContent = pick.A ? `${pick.A} mm² (I_r=${pick.Ir} A)` : `–`;
       el("qDu").textContent = pick.A ? `${round2(du)} % (ΔU=${round2(dU)} V)` : `–`;
 
-      // Step-by-step rendering (MathJax)
-      const sysLabel = (sys==="1p") ? "Wechselstrom (1~)" : (sys==="3p") ? "Drehstrom (3~)" : "Gleichstrom (⎓)";
-      const haufLabel = (haufType==="einlagig") ? "einlagig" : "gebündelt";
+      const nennstromOk = Ib <= In;
+      const querschnittOk = pick.A !== null;
+      const spannungsOk = (pick.A !== null) ? (du <= duMax) : false;
 
       const formulaIb = (sys==="dc")
         ? `I_B=\\frac{P_{ges}}{U}`
@@ -832,77 +817,63 @@
           ? `\\Delta U=\\frac{\\sqrt{3}\\,l\\,I\\,\\cos\\varphi}{\\kappa\\,A}`
           : `\\Delta U=\\frac{2\\,l\\,I\\,\\cos\\varphi}{\\kappa\\,A}`;
 
-      const stepsHTML = `
-        <div class="small">System: <span class="mono">${sysLabel}</span></div>
-        <hr class="hr">
-        <div><strong>1) Gesamtwirkleistung</strong></div>
-        <div class="mono">Pges = n · P = ${nLoad} · ${pEach} W = ${Pges} W</div>
+      el("steps").innerHTML = `
+        <div class="small">1) Gesamtwirkleistung</div>
+        <div class="mono">Pges = ${nLoad} · ${pEach} W = ${Pges} W</div>
 
-        <div class="hr"></div>
-        <div><strong>2) Betriebsstrom</strong></div>
+        <hr class="hr">
+        <div class="small">2) Betriebsstrom</div>
         <div>$$ ${formulaIb} $$</div>
         <div class="mono">I_B = ${round2(Ib)} A</div>
 
-        <div class="hr"></div>
-        <div><strong>3) Schutzeinrichtung</strong></div>
+        <hr class="hr">
+        <div class="small">3) Sicherung / Schutzorgan</div>
         <div>$$ I_B \\le I_N $$</div>
         <div class="mono">I_N = ${In} A (${InExplain})</div>
         <div class="mono">${nennstromOk ? "OK" : "NICHT OK"}: ${round2(Ib)} ≤ ${In}</div>
 
-        <div class="hr"></div>
-        <div><strong>4) Korrekturfaktoren (Strombelastbarkeit)</strong></div>
-        <div class="mono">Temperatur: f_T = ${fT} (${insul==="gummi60" ? "Gummi 60°C" : "PVC/PE 70°C"}, ${temp}°C)</div>
-        <div class="mono">Häufung: f_H = ${fH} (${haufLabel}, ${Math.max(1,Math.min(10,haufN))} Leitungen)</div>
-        <div class="mono">Trommel: f_Tr = ${fTr} (${layers===0 ? "abgerollt" : layers+" Lagen"})</div>
-        <div>$$ f = f_T \\cdot f_H \\cdot f_{Tr} = ${round3(f)} $$</div>
+        <hr class="hr">
+        <div class="small">4) Korrekturfaktoren</div>
+        <div class="mono">f_T = ${fT} | f_H = ${fH} | f_Tr = ${fTr}</div>
+        <div>$$ f = f_T\\cdot f_H\\cdot f_{Tr} = ${round3(f)} $$</div>
 
-        <div class="hr"></div>
-        <div><strong>5) Erforderliche Tabellen-Strombelastbarkeit</strong></div>
-        <div>$$ I_Z = I_r \\cdot f \\quad\\Rightarrow\\quad I_r \\ge \\frac{I_N}{f} $$</div>
+        <hr class="hr">
+        <div class="small">5) Erforderlicher Tabellenwert</div>
+        <div>$$ I_Z = I_r\\cdot f \\Rightarrow I_r \\ge \\frac{I_N}{f} $$</div>
         <div class="mono">I_r,erf = ${In} / ${round3(f)} = ${round2(IrReq)} A</div>
 
-        <div class="hr"></div>
-        <div><strong>6) Querschnittsauswahl über Tabelle</strong></div>
-        <div class="mono">Tabelle: ${tableType==="hh" ? "Flexible Leitungen – Haus/Handgeräte" : "Flexible Leitungen – alle anderen Anwendungen"}</div>
-        <div class="mono">Belastete Adern: ${cores}</div>
+        <hr class="hr">
+        <div class="small">6) Querschnittsauswahl</div>
         <div class="mono">
-          ${pick.A ? `Auswahl: A = ${pick.A} mm² (I_r=${pick.Ir} A) ≥ ${round2(IrReq)} A` : `Keine passende Auswahl. ${pick.note}`}
+          ${pick.A ? `A = ${pick.A} mm² (I_r=${pick.Ir} A) ≥ ${round2(IrReq)} A` : `Keine passende Auswahl. ${pick.note}`}
         </div>
 
-        <div class="hr"></div>
-        <div><strong>7) Spannungsfallprüfung</strong></div>
+        <hr class="hr">
+        <div class="small">7) Spannungsfall</div>
         <div class="mono">κ = ${kappa} m/(Ω·mm²)</div>
         <div>$$ ${duFormula} $$</div>
         ${pick.A ? `
           <div class="mono">ΔU = ${round2(dU)} V</div>
           <div>$$ \\Delta u = \\frac{\\Delta U}{U}\\cdot 100\\% $$</div>
           <div class="mono">Δu = ${round2(du)} %  (Grenze: ${duMax} %)</div>
-        ` : `<div class="mono">Spannungsfall nicht berechnet (kein Querschnitt ausgewählt).</div>`}
+        ` : `<div class="mono">Spannungsfall nicht berechnet (kein Querschnitt).</div>`}
       `;
 
-      el("steps").innerHTML = stepsHTML;
-
-      // Gesamtstatus
       if(!nennstromOk){
-        setStatus("bad", "Nennstromregel verletzt: Schutzorgan ist zu klein.", "Passe \(I_N\) an oder reduziere die Last.");
+        setStatus("bad", "Nennstromregel verletzt: Sicherung zu klein.", "Wähle eine höhere Sicherungsstufe oder reduziere die Last.");
       } else if(!querschnittOk){
-        setStatus("bad", "Kein Querschnitt gefunden (Strombelastbarkeit).", "Wähle eine andere Tabelle/Verlegeannahme oder erhöhe \(A\) außerhalb dieser Tabelle.");
+        setStatus("bad", "Kein Querschnitt gefunden (Strombelastbarkeit).", "Wähle andere Tabellenannahmen oder erhöhe Querschnitt außerhalb der Tabelle.");
       } else if(!spannungsOk){
-        setStatus("warn", "Strombelastbarkeit OK, aber Spannungsfall zu hoch.", "Erhöhe den Querschnitt oder reduziere die Leitungslänge.");
+        setStatus("warn", "Strombelastbarkeit OK, aber Spannungsfall zu hoch.", "Querschnitt erhöhen oder Leitungslänge reduzieren.");
       } else {
-        setStatus("ok", "Dimensionierung OK: Nennstromregel, Strombelastbarkeit und Spannungsfall erfüllt.", `Ergebnis: ${pick.A} mm² bei Δu=${round2(du)} %.`);
+        setStatus("ok", "Dimensionierung OK.", `Ergebnis: ${pick.A} mm² bei Δu=${round2(du)} %.`);
       }
 
-      // MathJax render
       if(window.MathJax) MathJax.typesetPromise();
     }
 
     el("btnCalc").addEventListener("click", calc);
-    el("btnFillExample").addEventListener("click", ()=>{ setExample(); calc(); });
-    el("btnReset").addEventListener("click", resetAll);
-
-    // Initial
-    setExample();
+    el("btnClear").addEventListener("click", clearInputs);
   </script>
 
 </body>
