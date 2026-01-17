@@ -374,7 +374,7 @@
             <div class="row"><div class="k">Betriebsstrom \(I_B\)</div><div class="v mono" id="qIb">–</div></div>
             <div class="row"><div class="k">Schutz \(I_N\)</div><div class="v mono" id="qIn">–</div></div>
             <div class="row"><div class="k">Faktorprodukt \(f\)</div><div class="v mono" id="qF">–</div></div>
-            <div class="row"><div class="k">Erforderlich \(I_r\)</div><div class="v mono" id="qIr">–</div></div>
+            <div class="row"><div class="k">Erforderlich \(I_Z\)</div><div class="v mono" id="qIr">–</div></div>
             <div class="row"><div class="k">Querschnitt \(A\)</div><div class="v mono" id="qA">–</div></div>
             <div class="row"><div class="k">Spannungsfall \(\Delta u\)</div><div class="v mono" id="qDu">–</div></div>
           </div>
@@ -630,7 +630,7 @@
       el("qIb").textContent = `${round2(Ib)} A`;
       el("qIn").textContent = `${In} A (${InExplain})`;
       el("qF").textContent  = `${round3(f)} (= ${round2(fT)} · ${round2(fH)} · ${round2(fTr)} · ${round2(fA)})`;
-      el("qIr").textContent = `${round2(IrReq)} A`;
+      el("qIr").textContent = `${round2(IrReq)} A (I_Z)`;
       el("qA").textContent  = pick.A ? `${pick.A} mm² (I_r=${pick.Ir} A)` : `–`;
       el("qDu").textContent = pick.A ? `${round2(du)} % (ΔU=${round2(dU)} V)` : `–`;
 
@@ -681,13 +681,18 @@
 
         <hr class="hr">
         <div class="small">5) Erforderlicher Tabellenwert</div>
-        <div>$$ I_Z = I_r\\cdot f \\Rightarrow I_r \\ge \\frac{I_N}{f} $$</div>
-        <div class="mono">I_r,erf = ${In} / ${round3(f)} = ${round2(IrReq)} A</div>
+        <div>$$ I_Z = \\frac{I_N}{f} $$</div>
+        <div class="mono">I_Z,erf = ${In} / ${round3(f)} = ${round2(IrReq)} A</div>
+        <div class="small" style="margin-top:6px;">Tabellenbedingung: \(I_r \\ge I_Z\)</div>
+
 
         <hr class="hr">
         <div class="small">6) Querschnittsauswahl</div>
         <div class="mono">
-          ${pick.A ? `A = ${pick.A} mm² (I_r=${pick.Ir} A) ≥ ${round2(IrReq)} A` : `Keine passende Auswahl. ${pick.note}`}
+          ${pick.A
+            ? `A = ${pick.A} mm² (I_r=${pick.Ir} A) ≥ I_Z=${round2(IrReq)} A`
+            : `Keine passende Auswahl. ${pick.note}`
+          }
         </div>
 
         <hr class="hr">
@@ -725,6 +730,7 @@
 
 </body>
 </html>
+
 
 
 
